@@ -755,7 +755,7 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
         </div>
 
         <div className="drawer-footer">
-          <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
             <Magnetic factor={0.25} textFactor={0.3}>
               <a
                 href={CV_FILE_PATH}
@@ -766,6 +766,30 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
                 <i className="fa-solid fa-file-arrow-down"></i>
                 <span>{t.cvBtn}</span>
               </a>
+            </Magnetic>
+
+            {/* Theme Switcher in Drawer */}
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <button
+                className="action-pill-btn"
+                onClick={toggleTheme}
+                style={{ background: "rgba(255,255,255,0.1)", color: "#fff", borderColor: "rgba(255,255,255,0.2)" }}
+              >
+                <i className={`fa-solid ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
+                <span>{theme === "dark" ? t.themeLight : t.themeDark}</span>
+              </button>
+            </Magnetic>
+
+            {/* Language Switcher in Drawer */}
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <button
+                className="action-pill-btn"
+                onClick={() => setLang(lang === "en" ? "ar" : "en")}
+                style={{ background: "rgba(255,255,255,0.1)", color: "#fff", borderColor: "rgba(255,255,255,0.2)" }}
+              >
+                <i className="fa-solid fa-globe"></i>
+                <span>{t.langToggle}</span>
+              </button>
             </Magnetic>
           </div>
 
@@ -1298,12 +1322,12 @@ function MLPlayground({ lang, theme }) {
         },
         scales: {
           x: {
-            grid: { color: "rgba(255, 255, 255, 0.05)" },
-            ticks: { color: "#666666", font: { family: "Fira Code", size: 10 } }
+            grid: { color: theme === "light" ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.05)" },
+            ticks: { color: theme === "light" ? "#71767f" : "#666666", font: { family: "Fira Code", size: 10 } }
           },
           y: {
-            grid: { color: "rgba(255, 255, 255, 0.05)" },
-            ticks: { color: "#666666", font: { family: "Fira Code", size: 10 } }
+            grid: { color: theme === "light" ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.05)" },
+            ticks: { color: theme === "light" ? "#71767f" : "#666666", font: { family: "Fira Code", size: 10 } }
           }
         }
       }
@@ -1581,9 +1605,11 @@ function Contact({ lang }) {
       </div>
 
       <footer id="contact" ref={contactRef} className="snellenberg-contact-cta">
-        {/* Dennis Snellenberg Physical Curved Section Divider entering footer */}
+        {/* Dennis Snellenberg Physical Curved Section Divider (Upward Dome Arch ∩) */}
         <div className="footer-rounded-div-wrap" ref={footerCurveRef}>
-          <div className="rounded-div"></div>
+          <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className="footer-curve-svg">
+            <path d="M 0,100 Q 720,0 1440,100 L 1440,100 L 0,100 Z" fill="#1c1d20" />
+          </svg>
         </div>
 
         <div className="container">

@@ -400,13 +400,13 @@ body.light-theme .action-pill-btn:hover {
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-hairline);
-  color: var(--text-primary);
+  background-color: #1c1d20 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
   cursor: pointer;
   transform: scale(0);
   transition: transform 0.4s var(--ease-snellenberg), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
@@ -429,9 +429,9 @@ body.light-theme .action-pill-btn:hover {
 }
 
 .floating-menu-btn:hover {
-  background-color: var(--accent-blue);
-  border-color: var(--accent-blue);
-  color: #ffffff;
+  background-color: var(--accent-blue) !important;
+  border-color: var(--accent-blue) !important;
+  color: #ffffff !important;
 }
 
 .burger-lines {
@@ -444,7 +444,7 @@ body.light-theme .action-pill-btn:hover {
 .burger-lines span {
   display: block;
   height: 1.5px;
-  background-color: currentColor;
+  background-color: #ffffff !important;
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
@@ -769,30 +769,23 @@ body.light-theme .action-pill-btn:hover {
   animation-direction: reverse;
 }
 
-/* Footer Curved Section Divider (Curved only at Footer as in Screenshot 3!) */
+/* Footer Curved Section Divider (Upward Dome Arch ∩ - Screenshot 3) */
 .footer-rounded-div-wrap {
   position: absolute;
-  top: 0;
+  bottom: 100%;
   left: 0;
   width: 100%;
   height: clamp(60px, 9vh, 110px);
   overflow: hidden;
-  transform: translateY(-99%);
   pointer-events: none;
   z-index: 20;
   will-change: height;
 }
 
-.footer-rounded-div-wrap .rounded-div {
-  position: absolute;
-  width: 150%;
-  height: 750%;
-  left: 50%;
-  bottom: 0;
-  top: auto;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background-color: #1c1d20;
+.footer-curve-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* ==========================================================================
@@ -1598,8 +1591,10 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
 .footer-more-work-container {
   display: flex;
   justify-content: center;
-  padding: 4rem 0 2rem 0;
+  padding: clamp(5rem, 8vh, 7rem) 0 clamp(7rem, 11vh, 9.5rem) 0;
   background-color: var(--bg-canvas);
+  position: relative;
+  z-index: 10;
 }
 
 .btn-more-work {
@@ -1951,4 +1946,253 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
   .marquee-track {
     animation: none !important;
   }
+}
+
+/* ==========================================================================
+   METICULOUS LIGHT & DARK THEME REFINEMENTS
+   ========================================================================== */
+
+/* --- DARK THEME SURFACES & PILLS (DEFAULT) --- */
+.skill-editorial-pill {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #d1d5db;
+}
+
+.skill-editorial-pill:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #141516;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+}
+
+.timeline-tag-pill {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+}
+
+.metric-strip-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.model-chip-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #9ca3af;
+}
+
+.model-chip-btn.active {
+  background-color: #ffffff;
+  color: #141516;
+  border-color: #ffffff;
+  font-weight: 600;
+}
+
+.btn-more-work {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.btn-more-work:hover {
+  background-color: #ffffff;
+  color: #141516;
+  border-color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* --- LIGHT THEME HIGH CONTRAST REFINEMENTS --- */
+body.light-theme {
+  --bg-canvas: #f8f9fa;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(248, 249, 250, 0.95);
+  --bg-nav: rgba(248, 249, 250, 0.95);
+
+  --text-primary: #121316;
+  --text-secondary: #4b5058;
+  --text-muted: #6b7280;
+  --text-dim: #9ca3af;
+
+  --border-hairline: rgba(0, 0, 0, 0.12);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+}
+
+/* Light Theme Hero Adjustments */
+body.light-theme .hero-located-pill {
+  background-color: #1c1d20;
+  color: #ffffff;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* Light Theme Outline Button */
+body.light-theme .btn-magnetic-outline {
+  border-color: rgba(0, 0, 0, 0.22);
+  color: #121316;
+}
+
+body.light-theme .btn-magnetic-outline:hover {
+  border-color: #121316;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Light Theme Metrics Stats */
+body.light-theme .editorial-stats-row {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .stat-huge-number {
+  color: #121316;
+}
+
+body.light-theme .stat-desc-label {
+  color: #4b5058;
+}
+
+/* Light Theme Code Terminal (Remains Sleek Dark IDE for Max Readability) */
+body.light-theme .editorial-code-terminal {
+  background-color: #18191c !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12) !important;
+}
+
+body.light-theme .terminal-header-bar {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.light-theme .terminal-file-name {
+  color: #94a3b8 !important;
+}
+
+body.light-theme .terminal-code-body {
+  color: #cbd5e1 !important;
+}
+
+/* Light Theme Academic Timeline */
+body.light-theme .timeline-row-item {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .timeline-row-item:last-child {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .timeline-row-item:hover {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+body.light-theme .timeline-tag-pill {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Light Theme Projects Section */
+body.light-theme .project-row {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .project-row:last-child {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .project-row:hover {
+  background-color: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .proj-col-arrow {
+  border-color: rgba(0, 0, 0, 0.16);
+  color: #121316;
+}
+
+body.light-theme .project-row:hover .proj-col-arrow {
+  background-color: #121316;
+  color: #ffffff;
+}
+
+body.light-theme .proj-col-metric {
+  background: rgba(69, 92, 233, 0.08);
+  border-color: rgba(69, 92, 233, 0.25);
+  color: #455ce9;
+}
+
+/* Light Theme ML Playground Card */
+body.light-theme .playground-editorial-card {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .metric-strip-card {
+  background-color: #f7f8fa;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .metric-strip-value {
+  color: #121316;
+}
+
+body.light-theme .model-chip-btn {
+  background-color: #f7f8fa;
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #4b5058;
+}
+
+body.light-theme .model-chip-btn.active {
+  background-color: #121316;
+  border-color: #121316;
+  color: #ffffff;
+}
+
+body.light-theme .minimal-range-input {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .minimal-range-input::-webkit-slider-thumb {
+  background: #121316;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Light Theme Toolkit Skills */
+body.light-theme .skill-cat-title {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  color: #121316;
+}
+
+body.light-theme .skill-editorial-pill {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #2b2d31;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .skill-editorial-pill:hover {
+  background-color: #121316;
+  border-color: #121316;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Light Theme More Work Pill */
+body.light-theme .btn-more-work {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #121316;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .btn-more-work:hover {
+  background-color: #121316;
+  color: #ffffff;
+  border-color: #121316;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
