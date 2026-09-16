@@ -118,6 +118,66 @@ button {
   cursor: pointer;
 }
 
+/* ==========================================================================
+   CUSTOM INTERACTIVE CURSOR (Dennis Snellenberg Style)
+   ========================================================================== */
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  pointer-events: none;
+  z-index: 100000;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: opacity 0.2s ease;
+}
+
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out), background-color 0.25s ease, border-color 0.25s ease, opacity 0.2s ease;
+}
+
+body.cursor-hover .custom-cursor-ring {
+  width: 58px;
+  height: 58px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+body.cursor-hover .custom-cursor-dot {
+  opacity: 0;
+}
+
+body.cursor-project .custom-cursor-ring {
+  width: 80px;
+  height: 80px;
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  mix-blend-mode: normal;
+}
+
+/* Touch devices: Cleanly disabled */
+@media (hover: none) or (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none !important;
+  }
+}
+
 /* CONTAINER */
 .container {
   max-width: 1440px;
@@ -200,13 +260,27 @@ button {
    NAVIGATION (Editorial Desktop Header & Floating Circular Menu)
    ========================================================================== */
 .snellenberg-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 2.2rem 0;
-  transition: transform var(--transition-fast);
+  padding: 1.8rem 0;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(20, 21, 22, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.45s var(--ease-snellenberg), opacity 0.3s ease;
+}
+
+body.light-theme .snellenberg-header {
+  background: rgba(244, 244, 245, 0.85);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.snellenberg-header.header-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
 }
 
 .header-content {
@@ -321,13 +395,24 @@ body.light-theme .action-pill-btn:hover {
   justify-content: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transform: scale(0);
+  transition: transform 0.4s var(--ease-snellenberg), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   user-select: none;
+}
+
+.floating-menu-btn.btn-visible {
+  transform: scale(1);
 }
 
 [dir="rtl"] .floating-menu-btn {
   right: auto;
   left: clamp(1.2rem, 4vw, 3.5rem);
+}
+
+@media (max-width: 900px) {
+  .floating-menu-btn {
+    transform: scale(1) !important;
+  }
 }
 
 .floating-menu-btn:hover {
@@ -543,9 +628,9 @@ body.light-theme .action-pill-btn:hover {
 
 .hero-editorial-grid {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: flex-end;
-  gap: 3rem;
+  grid-template-columns: 1.2fr 0.85fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
   margin-bottom: 3.5rem;
 }
 
@@ -556,26 +641,60 @@ body.light-theme .action-pill-btn:hover {
   max-width: 640px;
 }
 
-.hero-avatar-round-wrap {
+/* Dennis Snellenberg Editorial Portrait Frame */
+.hero-portrait-card {
   position: relative;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
+  width: clamp(270px, 30vw, 430px);
+  height: clamp(340px, 38vw, 530px);
+  border-radius: clamp(20px, 3vw, 36px);
   overflow: hidden;
   border: 1px solid var(--border-hairline);
   flex-shrink: 0;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  background: var(--bg-surface-elevated);
+  margin-inline-start: auto;
 }
 
-.hero-avatar-img {
+[dir="rtl"] .hero-portrait-card {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+}
+
+.hero-portrait-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s var(--ease-out);
+  object-position: center 15%;
+  transition: transform 0.8s var(--ease-out);
 }
 
-.hero-avatar-round-wrap:hover .hero-avatar-img {
-  transform: scale(1.08);
+.hero-portrait-card:hover .hero-portrait-img {
+  transform: scale(1.04);
+}
+
+.hero-portrait-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-pill);
+  background: rgba(20, 21, 22, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 2;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+[dir="rtl"] .hero-portrait-badge {
+  left: auto;
+  right: 1.5rem;
 }
 
 /* Hero Magnetic Buttons */
@@ -1002,27 +1121,23 @@ body.light-theme .action-pill-btn:hover {
   transform: rotate(45deg);
 }
 
-/* Floating Project Modal (Desktop Mouse Follower) */
+/* Floating Project Modal (Desktop Mouse Follower - Dennis Snellenberg Signature) */
 .project-floating-modal {
   position: fixed;
   top: 0;
   left: 0;
-  width: 320px;
-  height: 240px;
-  border-radius: var(--radius-lg);
+  width: clamp(290px, 28vw, 420px);
+  height: clamp(190px, 18vw, 270px);
+  border-radius: var(--radius-md);
   overflow: hidden;
   pointer-events: none;
   z-index: 999;
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-hairline);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85);
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.85);
-  transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.5rem;
+  transform: translate(-50%, -50%) scale(0.65);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out);
 }
 
 .project-floating-modal.active {
@@ -1030,8 +1145,28 @@ body.light-theme .action-pill-btn:hover {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.modal-inner-preview {
-  position: relative;
+.modal-img-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-project-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-inner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(20,21,22,0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem 1.5rem;
   z-index: 2;
 }
 
@@ -1039,7 +1174,7 @@ body.light-theme .action-pill-btn:hover {
   font-size: 1.15rem;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
 }
 
 .modal-inner-tag {
@@ -1054,6 +1189,16 @@ body.light-theme .action-pill-btn:hover {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border-subtle);
+}
+
+.mobile-project-img-preview {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-hairline);
+  display: block;
 }
 
 .project-mobile-actions {
@@ -1462,9 +1607,11 @@ body.light-theme .action-pill-btn:hover {
     gap: 1.5rem;
   }
 
-  .hero-avatar-round-wrap {
-    width: 130px;
-    height: 130px;
+  .hero-portrait-card {
+    width: 100%;
+    max-width: 380px;
+    height: 400px;
+    margin: 1.5rem auto 0 auto;
   }
 
   .curved-nav-drawer {

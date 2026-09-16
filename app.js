@@ -91,6 +91,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
+          image: "assets/projects/smartstay_preview.jpg",
           type: "Regression & Rental Forecasting",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "Regression engine engineered with Python and Scikit-Learn to forecast real-time property rental prices based on geospatial markers, capacity metrics, and seasonal demand swings.",
@@ -102,6 +103,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
+          image: "assets/projects/visionai_preview.jpg",
           type: "Supervised Computer Vision",
           metric: "Accuracy: 94.8% | Top-1: 5.2%",
           desc: "Supervised classification pipeline for multi-category image categorization, featuring automated image augmentation, feature extraction, confusion matrix visualization, and precision-recall trade-off metrics.",
@@ -113,6 +115,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
+          image: "assets/projects/datapulse_preview.jpg",
           type: "Classification & Business Intelligence",
           metric: "AUC-ROC: 0.912 | Recall: 89.4%",
           desc: "In-depth exploratory data analysis and predictive classification model identifying high-risk customer churn patterns with automated feature importance evaluation.",
@@ -278,6 +281,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
+          image: "assets/projects/smartstay_preview.jpg",
           type: "نموذج انحدار وتنبؤ بأسعار الإيجار",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "نموذج انحدار مبني باستخدام Python وScikit-Learn للتنبؤ بالأسعار الحقيقية لتأجير العقارات بناءً على الموقع الجغرافي وخصائص الغرف والخدمات ومواسم الطلب.",
@@ -289,6 +293,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
+          image: "assets/projects/visionai_preview.jpg",
           type: "تصنيف الصور بالتعلم الخاضع للإشراف",
           metric: "الدقة: 94.8% | خطأ أعلى-1: 5.2%",
           desc: "خط معالجة ذكي لتصنيف مجموعات الصور متعددة الفئات، يشمل تكثيف البيانات بصرياً، استخراج الميزات، ومصفوفة الارتباك لتقييم الدقة والاستدعاء.",
@@ -300,6 +305,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
+          image: "assets/projects/datapulse_preview.jpg",
           type: "تحليل استكشافي وتنبؤ باحتفاظ العملاء",
           metric: "AUC-ROC: 0.912 | استدعاء: 89.4%",
           desc: "دراسة استكشافية متعمقة (EDA) ونموذج تصنيف للتنبؤ باحتمالية تسرب العملاء والاحتفاظ بهم، مع استخراج العوامل المؤثرة لتزويد صناع القرار بتوصيات فورية.",
@@ -480,6 +486,66 @@ function CairoClock() {
 }
 
 // ==========================================================================
+// 2. CUSTOM INTERACTIVE CURSOR (GSAP quickTo Hardware-Accelerated)
+// ==========================================================================
+function CustomCursor() {
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+
+  useEffect(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring || !window.gsap) return;
+    if (window.matchMedia && window.matchMedia("(hover: none)").matches) return;
+
+    const setDotX = gsap.quickTo(dot, "x", { duration: 0.1, ease: "power2.out" });
+    const setDotY = gsap.quickTo(dot, "y", { duration: 0.1, ease: "power2.out" });
+    const setRingX = gsap.quickTo(ring, "x", { duration: 0.3, ease: "power2.out" });
+    const setRingY = gsap.quickTo(ring, "y", { duration: 0.3, ease: "power2.out" });
+
+    const handleMouseMove = (e) => {
+      setDotX(e.clientX);
+      setDotY(e.clientY);
+      setRingX(e.clientX);
+      setRingY(e.clientY);
+    };
+
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (
+        target.closest("a, button, .btn-magnetic, .btn-giant-circle, .action-pill-btn, .floating-menu-btn, input, select")
+      ) {
+        document.body.classList.add("cursor-hover");
+      } else {
+        document.body.classList.remove("cursor-hover");
+      }
+
+      if (target.closest(".project-row")) {
+        document.body.classList.add("cursor-project");
+      } else {
+        document.body.classList.remove("cursor-project");
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseover", handleMouseOver);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.body.classList.remove("cursor-hover", "cursor-project");
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={dotRef} className="custom-cursor-dot" />
+      <div ref={ringRef} className="custom-cursor-ring" />
+    </>
+  );
+}
+
+// ==========================================================================
 // 2.5 SNELLENBERG MAGNETIC BUTTON WRAPPER (GSAP Elastic Physics & Cursor Tracking)
 // ==========================================================================
 function Magnetic({ children, factor = 0.35, textFactor = 0.45, rotateFactor = 0 }) {
@@ -562,7 +628,30 @@ function Magnetic({ children, factor = 0.35, textFactor = 0.45, rotateFactor = 0
 // ==========================================================================
 function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const t = CONTENT[lang].nav;
+
+  // Track scroll to toggle Dennis Snellenberg dual-state header
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 150);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Lock body scroll when curved drawer is open
+  useEffect(() => {
+    if (drawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [drawerOpen]);
 
   // Close drawer on escape key
   useEffect(() => {
@@ -585,7 +674,7 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
 
   return (
     <>
-      <header className="snellenberg-header">
+      <header className={`snellenberg-header ${scrolled ? "header-hidden" : ""}`}>
         <div className="container header-content">
           <a href="#hero" className="brand-monogram">
             <span className="brand-dot"></span>
@@ -631,7 +720,7 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
       {/* Floating Circular Burger Button */}
       <Magnetic factor={0.35} textFactor={0.4}>
         <button
-          className={`floating-menu-btn ${drawerOpen ? "active" : ""}`}
+          className={`floating-menu-btn ${drawerOpen ? "active" : ""} ${scrolled || drawerOpen ? "btn-visible" : ""}`}
           onClick={() => setDrawerOpen(!drawerOpen)}
           aria-label="Toggle Menu"
         >
@@ -771,12 +860,16 @@ function Hero({ lang }) {
             </div>
           </div>
 
-          <div className="hero-avatar-round-wrap">
+          <div className="hero-portrait-card">
             <img
-              src="photo_2026-08-14_23-14-40.jpg"
+              src="assets/hero/mariam_elgohr_hero.jpg"
               alt="Mariam Ahmed Elgohr"
-              className="hero-avatar-img"
+              className="hero-portrait-img"
             />
+            <div className="hero-portrait-badge">
+              <span className="live-pulse-dot"></span>
+              <span>DEPI AI Fellow</span>
+            </div>
           </div>
         </div>
       </div>
@@ -938,8 +1031,18 @@ function Projects({ lang }) {
 
   const handleMouseMove = useCallback((e) => {
     if (modalRef.current) {
-      modalRef.current.style.left = `${e.clientX}px`;
-      modalRef.current.style.top = `${e.clientY}px`;
+      if (window.gsap) {
+        gsap.to(modalRef.current, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      } else {
+        modalRef.current.style.left = `${e.clientX}px`;
+        modalRef.current.style.top = `${e.clientY}px`;
+      }
     }
   }, []);
 
@@ -982,7 +1085,7 @@ function Projects({ lang }) {
                 <i className="fa-solid fa-arrow-up-right-from-square"></i>
               </div>
 
-              {/* Mobile Expanded Details */}
+              {/* Mobile Expanded Details with Visual Preview */}
               <div
                 className="mobile-project-details"
                 style={{
@@ -990,6 +1093,7 @@ function Projects({ lang }) {
                   display: expandedMobile === p.id ? "block" : "none"
                 }}
               >
+                <img src={p.image} alt={p.title} className="mobile-project-img-preview" />
                 <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginBottom: "0.8rem" }}>
                   {p.desc}
                 </p>
@@ -1014,14 +1118,21 @@ function Projects({ lang }) {
         </div>
       </div>
 
-      {/* Floating Modal Preview (Desktop Mouse Follower) */}
+      {/* Floating Modal Preview (Desktop Mouse Follower - Dennis Snellenberg Signature) */}
       <div
         ref={modalRef}
         className={`project-floating-modal ${modalActive ? "active" : ""}`}
       >
-        <div className="modal-inner-preview">
+        <div className="modal-img-wrap">
+          <img
+            src={activeProject.image}
+            alt={activeProject.title}
+            className="modal-project-img"
+          />
+        </div>
+        <div className="modal-inner-overlay">
           <div className="modal-inner-tag">{activeProject.type}</div>
-          <div className="modal-inner-title">{activeProject.title}</div>
+          <h4 className="modal-inner-title">{activeProject.title}</h4>
           <div style={{ fontSize: "0.85rem", color: "#38bdf8", fontFamily: "var(--font-mono)" }}>
             {activeProject.metric}
           </div>
@@ -1532,6 +1643,7 @@ function App() {
 
   return (
     <div className="snellenberg-portfolio">
+      <CustomCursor />
       <DennisPreloader onFinish={() => setIntroFinished(true)} />
       <EditorialHeader lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
       <Hero lang={lang} />
