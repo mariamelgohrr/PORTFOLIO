@@ -1847,21 +1847,10 @@ function App() {
   const [lang, setLang] = useState("en");
   const [introFinished, setIntroFinished] = useState(false);
 
-  const [theme, setTheme] = useState(() => {
-    try {
-      const saved = localStorage.getItem("portfolio_theme");
-      return saved === "light" ? "light" : "dark";
-    } catch (e) {
-      return "dark";
-    }
-  });
+  const [theme, setTheme] = useState("light");
 
   const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    try {
-      localStorage.setItem("portfolio_theme", next);
-    } catch (e) {}
+    setTheme("light");
   };
 
   // Lenis Smooth Scroll initialization
@@ -1922,16 +1911,14 @@ function App() {
     }
   }, []);
 
-  // Theme synchronization
+  // Theme synchronization: Exclusively White / Light Editorial Theme
   useEffect(() => {
-    if (theme === "light") {
-      document.body.classList.add("light-theme");
-      document.documentElement.classList.add("light-theme-active");
-    } else {
-      document.body.classList.remove("light-theme");
-      document.documentElement.classList.remove("light-theme-active");
-    }
-  }, [theme]);
+    document.body.classList.add("light-theme");
+    document.documentElement.classList.add("light-theme-active");
+    try {
+      localStorage.setItem("portfolio_theme", "light");
+    } catch (e) {}
+  }, []);
 
   // Language synchronization
   useEffect(() => {
