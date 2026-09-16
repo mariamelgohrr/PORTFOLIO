@@ -20,7 +20,7 @@ const CONTENT = {
     },
     hero: {
       badge: "Available for Machine Learning & Data Science Roles",
-      name: "Mariam Ahmed Elgohr",
+      name: "Mariam Elgohr",
       roles: [
         "Machine Learning Engineer",
         "Data Science Student",
@@ -192,7 +192,7 @@ const CONTENT = {
     },
     footer: {
       designed: "Designed & Engineered with 💜 by Mariam Elgohr.",
-      rights: "© 2026 Mariam Ahmed Elgohr • Built with React, Modern CSS & Machine Learning mindset."
+      rights:"© 2026 Mariam Ahmed Elgohr • Powered by curiosity and machine learning algorithms 🚀"
     }
   },
 
@@ -215,7 +215,7 @@ const CONTENT = {
     },
     hero: {
       badge: "متاحة لفرص العمل في مجال تعلم الآلة وعلوم البيانات",
-      name: "مريم أحمد الجحر",
+      name: "Mariam ELgohr",
       roles: [
         "مهندسة تعلم آلة (Machine Learning Engineer)",
         "طالبة علوم بيانات (Data Science Student)",
@@ -387,7 +387,7 @@ const CONTENT = {
     },
     footer: {
       designed: "تم التصميم والبرمجة بكل 💜 بواسطة مريم الجحر.",
-      rights: "© 2026 مريم أحمد الجحر • بنيت باستخدام React وتقنيات الويب الحديثة وعقلية تعلم الآلة."
+      rights: "© 2026 مريم أحمد الجحر • مدعومة بالشغف وفضول خوارزميات التعلم الآلي 🚀"
     }
   }
 };
