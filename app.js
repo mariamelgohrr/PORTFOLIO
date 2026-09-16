@@ -716,32 +716,6 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
                 <a href="#contact" onClick={(e) => handleNavClick(e, "#contact")}>{t.contact}</a>
               </li>
             </ul>
-
-            <div className="header-actions">
-              {/* Theme Toggle Pill */}
-              <Magnetic factor={0.25} textFactor={0.3}>
-                <button
-                  className="action-pill-btn"
-                  onClick={toggleTheme}
-                  aria-label="Toggle Theme"
-                  title={theme === "dark" ? "Light Mode" : "Dark Mode"}
-                >
-                  <i className={`fa-solid ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
-                </button>
-              </Magnetic>
-
-              {/* Language Switcher Pill */}
-              <Magnetic factor={0.25} textFactor={0.3}>
-                <button
-                  className="action-pill-btn"
-                  onClick={() => setLang(lang === "en" ? "ar" : "en")}
-                  aria-label="Switch Language"
-                >
-                  <i className="fa-solid fa-globe"></i>
-                  <span>{t.langToggle}</span>
-                </button>
-              </Magnetic>
-            </div>
           </div>
         </div>
       </header>
@@ -796,30 +770,6 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
                 <span>{t.cvBtn}</span>
               </a>
             </Magnetic>
-
-            {/* Theme Switcher in Drawer */}
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <button
-                className="action-pill-btn"
-                onClick={toggleTheme}
-                style={{ background: "rgba(255,255,255,0.1)", color: "#fff", borderColor: "rgba(255,255,255,0.2)" }}
-              >
-                <i className={`fa-solid ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
-                <span>{theme === "dark" ? t.themeLight : t.themeDark}</span>
-              </button>
-            </Magnetic>
-
-            {/* Language Switcher in Drawer */}
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <button
-                className="action-pill-btn"
-                onClick={() => setLang(lang === "en" ? "ar" : "en")}
-                style={{ background: "rgba(255,255,255,0.1)", color: "#fff", borderColor: "rgba(255,255,255,0.2)" }}
-              >
-                <i className="fa-solid fa-globe"></i>
-                <span>{t.langToggle}</span>
-              </button>
-            </Magnetic>
           </div>
 
           <div className="drawer-socials">
@@ -867,8 +817,9 @@ function Hero({ lang }) {
     if (!window.gsap || !window.ScrollTrigger) return;
 
     const ctx = gsap.context(() => {
-      // 1. Studio portrait subtle parallax scrub
-      if (imageRef.current && heroRef.current) {
+      // 1. Studio portrait subtle parallax scrub (Desktop only to prevent mobile displacement)
+      const isMobile = window.innerWidth <= 768;
+      if (!isMobile && imageRef.current && heroRef.current) {
         gsap.to(imageRef.current, {
           yPercent: 10,
           ease: "none",

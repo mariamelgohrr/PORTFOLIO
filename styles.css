@@ -2027,25 +2027,49 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
 
   /* 2. Full-bleed Hero on Mobile (Dennis Snellenberg Screenshot 1 Pattern) */
   .snellenberg-hero.home-header {
-    height: 100vh;
-    height: 100dvh;
-    min-height: 560px;
-    overflow: hidden;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .home-header .personal-image {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    transform: none !important;
+    z-index: 1 !important;
   }
 
   .home-header .personal-image picture,
   .home-header .personal-image-picture {
     display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
   }
 
   .home-header .personal-image-img {
-    height: 100% !important;
-    max-height: 100% !important;
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
     object-fit: cover !important;
-    object-position: center 18% !important;
+    object-position: center 20% !important;
     -webkit-mask-image: none !important;
     mask-image: none !important;
   }
