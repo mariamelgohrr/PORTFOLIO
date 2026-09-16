@@ -1586,7 +1586,11 @@ body.light-theme .snellenberg-contact-cta {
   color: #ffffff;
 }
 
-body.light-theme .snellenberg-contact-cta .contact-huge-headline {
+body.light-theme .snellenberg-contact-cta .contact-title-text {
+  color: #ffffff;
+}
+
+body.light-theme .snellenberg-contact-cta .contact-arrow-indicator {
   color: #ffffff;
 }
 
@@ -1644,18 +1648,35 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
   transform: scale(1.05);
 }
 
-/* Dennis Snellenberg Footer Header Block (Screenshot 3) */
-.contact-header-block {
+/* Dennis Snellenberg Editorial Contact Header (Image 1 Reference) */
+.contact-editorial-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: clamp(3.5rem, 6vh, 5.5rem);
+}
+
+.contact-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.6vh, 0.6rem);
+}
+
+.contact-title-line {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2.5vw, 2.5rem);
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+  gap: clamp(1rem, 2vw, 2.2rem);
+}
+
+.contact-avatar-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .contact-avatar-img {
-  width: clamp(70px, 8vw, 95px);
-  height: clamp(70px, 8vw, 95px);
+  width: clamp(65px, 6.5vw, 90px);
+  height: clamp(65px, 6.5vw, 90px);
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
@@ -1663,32 +1684,28 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.contact-huge-headline {
-  font-size: clamp(3.2rem, 9.5vw, 8.8rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.035em;
+.contact-title-text {
+  font-size: clamp(2.8rem, 6.2vw, 5.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   color: #ffffff;
   margin: 0;
 }
 
 .contact-arrow-indicator {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
   color: #ffffff;
-  opacity: 0.8;
-  margin-left: auto;
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
-[dir="rtl"] .contact-arrow-indicator {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-/* Action Zone with Hairline and Floating Circle (Screenshot 3) */
+/* Action Zone with Hairline and Floating Circle (Image 1 Reference) */
 .contact-action-zone {
   position: relative;
   width: 100%;
-  margin: 4.5rem 0 5rem 0;
+  margin: clamp(4rem, 7vh, 6rem) 0;
 }
 
 .contact-hairline-separator {
@@ -1699,7 +1716,7 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
 
 .contact-circle-anchor {
   position: absolute;
-  right: clamp(2rem, 15vw, 15rem);
+  right: clamp(4rem, 20vw, 22rem);
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
@@ -1707,38 +1724,41 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
 
 [dir="rtl"] .contact-circle-anchor {
   right: auto;
-  left: clamp(2rem, 15vw, 15rem);
+  left: clamp(4rem, 20vw, 22rem);
 }
 
 .btn-giant-circle {
-  width: clamp(160px, 18vw, 210px);
-  height: clamp(160px, 18vw, 210px);
+  width: clamp(140px, 14vw, 185px);
+  height: clamp(140px, 14vw, 185px);
   border-radius: 50%;
   background-color: #455ce9;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
   font-weight: 500;
   border: none;
   cursor: pointer;
   box-shadow: 0 20px 50px rgba(69, 92, 233, 0.45);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s var(--ease-snellenberg);
   user-select: none;
+  text-decoration: none;
 }
 
 .btn-giant-circle:hover {
   background-color: #3b50d5;
   box-shadow: 0 25px 60px rgba(69, 92, 233, 0.6);
+  transform: scale(1.06);
 }
 
-/* Contact Pills Row (Screenshot 3) */
+/* Contact Pills Row (Image 1 Reference) */
 .contact-pills-row {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
   flex-wrap: wrap;
+  margin-top: clamp(4rem, 7vh, 6rem);
   margin-bottom: 4rem;
 }
 
@@ -1750,14 +1770,16 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   font-size: 1.05rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-weight: 400;
+  transition: all 0.3s var(--ease-out);
   text-decoration: none;
+  background: transparent;
 }
 
 .contact-pill-link:hover {
   border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  color: #1c1d20;
   transform: translateY(-2px);
 }
 
@@ -2161,23 +2183,31 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
     overflow: hidden;
   }
 
-  .contact-header-block {
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+  .contact-editorial-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .contact-title-line {
+    gap: 0.8rem;
   }
 
   .contact-avatar-img {
-    width: 65px;
-    height: 65px;
+    width: 52px;
+    height: 52px;
   }
 
-  .contact-huge-headline {
-    font-size: clamp(2.4rem, 10vw, 4.2rem);
-    line-height: 0.98;
+  .contact-title-text {
+    font-size: clamp(2rem, 8.5vw, 3.2rem);
+    line-height: 1.08;
   }
 
   .contact-arrow-indicator {
-    display: none; /* Hide huge arrow on mobile to prevent overflow */
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
   }
 
   .contact-action-zone {

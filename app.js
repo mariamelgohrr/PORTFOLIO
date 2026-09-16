@@ -1576,7 +1576,7 @@ function Contact({ lang }) {
           scrollTrigger: {
             trigger: contactRef.current,
             start: "top 95%",
-            end: "top 35%",
+            end: "top 10%",
             scrub: 0.5
           }
         });
@@ -1613,19 +1613,27 @@ function Contact({ lang }) {
         </div>
 
         <div className="container">
-          {/* Headline Row with Avatar, Title & Arrow (Screenshot 3) */}
-          <div className="contact-header-block">
-            <img
-              src="assets/hero/mariam_elgohr_hero.jpg"
-              alt="Mariam Ahmed Elgohr"
-              className="contact-avatar-img"
-            />
-            <h2 className="contact-huge-headline">
-              {lang === "ar" ? "لنعمل معاً" : "Let's work together"}
-            </h2>
-            <span className="contact-arrow-indicator">
-              <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-left" : "fa-arrow-down-right"}`}></i>
-            </span>
+          {/* Editorial Headline with Avatar, Two-Line Title & Arrow (Dennis Snellenberg Screenshot 3) */}
+          <div className="contact-editorial-header">
+            <div className="contact-title-group">
+              <div className="contact-title-line contact-title-line-1">
+                <span className="contact-avatar-wrap">
+                  <img
+                    src="assets/hero/mariam_elgohr_hero.jpg"
+                    alt="Mariam Ahmed Elgohr"
+                    className="contact-avatar-img"
+                  />
+                </span>
+                <h2 className="contact-title-text">{lang === "ar" ? "لنعمل" : "Let's work"}</h2>
+              </div>
+              <div className="contact-title-line contact-title-line-2">
+                <h2 className="contact-title-text">{lang === "ar" ? "معاً" : "together"}</h2>
+              </div>
+            </div>
+
+            <div className="contact-arrow-indicator">
+              <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-right" : "fa-arrow-down-left"}`}></i>
+            </div>
           </div>
 
           {/* Action Zone with Hairline and Floating Circle (Screenshot 3) */}
