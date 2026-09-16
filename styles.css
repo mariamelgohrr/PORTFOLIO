@@ -1491,6 +1491,8 @@ body.light-theme .action-pill-btn:hover {
   border-radius: var(--radius-lg);
   padding: 3.5rem;
   margin-top: 3rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .playground-grid-split {
@@ -1498,6 +1500,13 @@ body.light-theme .action-pill-btn:hover {
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
+}
+
+.playground-grid-split > div,
+.playground-controls-col,
+.playground-results-col {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .editorial-slider-group {
@@ -1525,6 +1534,8 @@ body.light-theme .action-pill-btn:hover {
   border-radius: 9999px;
   outline: none;
   -webkit-appearance: none;
+  direction: ltr;
+  touch-action: pan-y;
 }
 
 .minimal-range-input::-webkit-slider-thumb {
@@ -1570,7 +1581,27 @@ body.light-theme .action-pill-btn:hover {
 .chart-editorial-box {
   height: 280px;
   width: 100%;
+  max-width: 100%;
   position: relative;
+}
+
+.chart-editorial-box canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block;
+}
+
+.playground-status-row {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playground-status-row .live-pulse-dot {
+  flex-shrink: 0;
 }
 
 .metrics-metrics-strip {
@@ -2295,30 +2326,114 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
 
   /* 7. ML Playground on Mobile */
   .playground-editorial-card {
-    padding: 1.8rem 1.2rem;
+    padding: 1.4rem 1rem;
+    border-radius: var(--radius-md);
+    margin-top: 2rem;
+    overflow: hidden;
   }
 
   .playground-grid-split {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+  }
+
+  .playground-results-col {
+    order: -1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .playground-controls-col {
+    order: 1;
+    width: 100%;
+    min-width: 0;
   }
 
   .metrics-metrics-strip {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-bottom: 1.1rem;
   }
 
   .metric-strip-card {
-    padding: 0.8rem 0.5rem;
+    padding: 0.7rem 0.35rem;
     text-align: center;
+    border-radius: var(--radius-sm);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .metric-strip-label {
+    font-size: clamp(0.62rem, 2.2vw, 0.72rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.25rem;
   }
 
   .metric-strip-value {
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 3.8vw, 1.25rem);
   }
 
   .chart-editorial-box {
-    height: 220px;
+    height: 200px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .chart-editorial-box canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+  }
+
+  .editorial-slider-group {
+    margin-bottom: 1.35rem;
+  }
+
+  .slider-top-labels {
+    font-size: 0.82rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .minimal-range-input {
+    direction: ltr;
+    height: 6px;
+    padding: 8px 0;
+    touch-action: pan-y;
+  }
+
+  .minimal-range-input::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+    background: #455ce9;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(69, 92, 233, 0.5);
+  }
+
+  .model-chips-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .model-chip-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 0.7rem 0.8rem;
+    font-size: 0.84rem;
+    white-space: normal;
+  }
+
+  .playground-status-row {
+    font-size: 0.76rem;
+    line-height: 1.4;
   }
 
   /* 8. Skills on Mobile */

@@ -140,7 +140,7 @@ const CONTENT = {
         { id: "svm", name: "Support Vector Machine" }
       ],
       accuracy: "Accuracy",
-      loss: "Final Loss",
+      loss: "Loss",
       f1: "F1-Score",
       statusReady: "Optimizer Converged • Gradient Descent Successful",
       runSim: "Run Optimization"
@@ -325,13 +325,13 @@ const CONTENT = {
       epochsLabel: "دورات التدريب (Epochs):",
       algorithmLabel: "بنية النموذج المصنف:",
       models: [
-        { id: "rf", name: "الغابة العشوائية (Random Forest)" },
-        { id: "gb", name: "التدرج المعزز (Gradient Boosting)" },
-        { id: "svm", name: "آلات المتجهات (SVM)" }
+        { id: "rf", name: "Random Forest (غابة عشوائية)" },
+        { id: "gb", name: "Gradient Boosting (تدرج معزز)" },
+        { id: "svm", name: "SVM (آلات المتجهات)" }
       ],
-      accuracy: "دقة النموذج",
-      loss: "الخسارة النهائية",
-      f1: "معامل F1",
+      accuracy: "الدقة",
+      loss: "الخسارة",
+      f1: "مقياس F1",
       statusReady: "تم تقارب النموذج • انتهت عملية التحسين بنجاح",
       runSim: "تشغيل عملية التحسين"
     },
@@ -1400,17 +1400,28 @@ function MLPlayground({ lang, theme }) {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        resizeDelay: 50,
         plugins: {
           legend: { display: false }
         },
         scales: {
           x: {
             grid: { color: theme === "light" ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.05)" },
-            ticks: { color: theme === "light" ? "#71767f" : "#666666", font: { family: "Fira Code", size: 10 } }
+            ticks: {
+              maxTicksLimit: 6,
+              maxRotation: 0,
+              autoSkip: true,
+              color: theme === "light" ? "#71767f" : "#666666",
+              font: { family: "Fira Code", size: 10 }
+            }
           },
           y: {
             grid: { color: theme === "light" ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.05)" },
-            ticks: { color: theme === "light" ? "#71767f" : "#666666", font: { family: "Fira Code", size: 10 } }
+            ticks: {
+              maxTicksLimit: 5,
+              color: theme === "light" ? "#71767f" : "#666666",
+              font: { family: "Fira Code", size: 10 }
+            }
           }
         }
       }
@@ -1437,7 +1448,7 @@ function MLPlayground({ lang, theme }) {
         <div className="playground-editorial-card">
           <div className="playground-grid-split">
             {/* Parameters Controls */}
-            <div>
+            <div className="playground-controls-col">
               <div className="editorial-slider-group">
                 <div className="slider-top-labels">
                   <span>{t.featuresLabel}</span>
@@ -1529,7 +1540,7 @@ function MLPlayground({ lang, theme }) {
             </div>
 
             {/* Results & Visual Loss Graph */}
-            <div>
+            <div className="playground-results-col">
               <div className="metrics-metrics-strip">
                 <div className="metric-strip-card">
                   <div className="metric-strip-label">{t.accuracy}</div>
@@ -1551,7 +1562,7 @@ function MLPlayground({ lang, theme }) {
                 <canvas ref={chartCanvasRef}></canvas>
               </div>
 
-              <div style={{ marginTop: "1rem", fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div className="playground-status-row">
                 <span className="live-pulse-dot"></span>
                 <span>{t.statusReady}</span>
               </div>
