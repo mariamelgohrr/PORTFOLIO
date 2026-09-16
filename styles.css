@@ -292,7 +292,7 @@ button {
   color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .action-pill-btn:hover {
@@ -321,7 +321,7 @@ body.light-theme .action-pill-btn:hover {
   justify-content: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  transition: transform 0.4s var(--ease-snellenberg), background-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   user-select: none;
 }
 
@@ -331,7 +331,6 @@ body.light-theme .action-pill-btn:hover {
 }
 
 .floating-menu-btn:hover {
-  transform: scale(1.08);
   background-color: var(--accent-blue);
   border-color: var(--accent-blue);
   color: #ffffff;
@@ -598,7 +597,7 @@ body.light-theme .action-pill-btn:hover {
   font-weight: 600;
   position: relative;
   overflow: hidden;
-  transition: color 0.35s ease, border-color 0.35s ease, transform 0.2s ease;
+  transition: color 0.35s ease, border-color 0.35s ease, background-color 0.35s ease;
   user-select: none;
 }
 
@@ -1297,22 +1296,17 @@ body.light-theme .action-pill-btn:hover {
   border: none;
   cursor: pointer;
   box-shadow: 0 20px 50px rgba(69, 92, 233, 0.4);
-  transition: transform 0.35s var(--ease-snellenberg), background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   user-select: none;
 }
 
 .btn-giant-circle:hover {
-  transform: scale(1.08);
   background-color: #3b50d5;
+  box-shadow: 0 25px 60px rgba(69, 92, 233, 0.55);
 }
 
 .btn-giant-circle i {
   font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.btn-giant-circle:hover i {
-  transform: translate(3px, -3px);
 }
 
 /* Contact Info & Channels */

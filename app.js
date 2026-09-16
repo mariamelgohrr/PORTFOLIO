@@ -189,8 +189,7 @@ const CONTENT = {
       successMsg: "Message sent successfully. I will get back to you shortly."
     },
     footer: {
-      rights: "© 2026 Mariam Ahmed Elgohr. All rights reserved.",
-      designed: "Editorial Design inspired by Dennis Snellenberg."
+      rights: "© 2026 Mariam Ahmed Elgohr. All rights reserved."
     }
   },
 
@@ -377,8 +376,7 @@ const CONTENT = {
       successMsg: "تم إرسال رسالتك بنجاح، وسأتواصل معك في أقرب وقت."
     },
     footer: {
-      rights: "© 2026 مريم أحمد الجحر • جميع الحقوق محفوظة.",
-      designed: "تصميم إيديتوريال مستوحى من فلسفة Dennis Snellenberg."
+      rights: "© 2026 مريم أحمد الجحر • جميع الحقوق محفوظة."
     }
   }
 };
@@ -482,6 +480,84 @@ function CairoClock() {
 }
 
 // ==========================================================================
+// 2.5 SNELLENBERG MAGNETIC BUTTON WRAPPER (GSAP Elastic Physics & Cursor Tracking)
+// ==========================================================================
+function Magnetic({ children, factor = 0.35, textFactor = 0.45, rotateFactor = 0 }) {
+  const itemRef = useRef(null);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el || !window.gsap) return;
+    // Disable on touch-only devices to ensure native scrolling & gestures
+    if (window.matchMedia && window.matchMedia("(hover: none)").matches) return;
+
+    const handleMouseMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distX = e.clientX - centerX;
+      const distY = e.clientY - centerY;
+      const x = distX * factor;
+      const y = distY * factor;
+      const rotation = rotateFactor ? x * rotateFactor : 0;
+
+      // Magnetic body translation with responsive tracking
+      gsap.to(el, {
+        x,
+        y,
+        rotation,
+        duration: 0.35,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+
+      // Dennis Snellenberg inner parallax for direct children (text & icons)
+      if (el.children && el.children.length > 0) {
+        gsap.to(el.children, {
+          x: x * textFactor,
+          y: y * textFactor,
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      // Elastic snap-back to rest position
+      gsap.to(el, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        duration: 0.85,
+        ease: "elastic.out(1.2, 0.35)",
+        overwrite: "auto"
+      });
+
+      if (el.children && el.children.length > 0) {
+        gsap.to(el.children, {
+          x: 0,
+          y: 0,
+          duration: 0.85,
+          ease: "elastic.out(1.2, 0.35)",
+          overwrite: "auto"
+        });
+      }
+    };
+
+    el.addEventListener("mousemove", handleMouseMove);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      el.removeEventListener("mousemove", handleMouseMove);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [factor, textFactor, rotateFactor]);
+
+  return React.cloneElement(React.Children.only(children), { ref: itemRef });
+}
+
+// ==========================================================================
 // 3. EDITORIAL HEADER & FLOATING CIRCULAR MENU (Dennis Snellenberg Style)
 // ==========================================================================
 function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
@@ -525,41 +601,47 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
 
             <div className="header-actions">
               {/* Theme Toggle Pill */}
-              <button
-                className="action-pill-btn"
-                onClick={toggleTheme}
-                aria-label="Toggle Theme"
-                title={theme === "dark" ? "Light Mode" : "Dark Mode"}
-              >
-                <i className={`fa-solid ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
-              </button>
+              <Magnetic factor={0.25} textFactor={0.3}>
+                <button
+                  className="action-pill-btn"
+                  onClick={toggleTheme}
+                  aria-label="Toggle Theme"
+                  title={theme === "dark" ? "Light Mode" : "Dark Mode"}
+                >
+                  <i className={`fa-solid ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
+                </button>
+              </Magnetic>
 
               {/* Language Switcher Pill */}
-              <button
-                className="action-pill-btn"
-                onClick={() => setLang(lang === "en" ? "ar" : "en")}
-                aria-label="Switch Language"
-              >
-                <i className="fa-solid fa-globe"></i>
-                <span>{t.langToggle}</span>
-              </button>
+              <Magnetic factor={0.25} textFactor={0.3}>
+                <button
+                  className="action-pill-btn"
+                  onClick={() => setLang(lang === "en" ? "ar" : "en")}
+                  aria-label="Switch Language"
+                >
+                  <i className="fa-solid fa-globe"></i>
+                  <span>{t.langToggle}</span>
+                </button>
+              </Magnetic>
             </div>
           </div>
         </div>
       </header>
 
       {/* Floating Circular Burger Button */}
-      <button
-        className={`floating-menu-btn ${drawerOpen ? "active" : ""}`}
-        onClick={() => setDrawerOpen(!drawerOpen)}
-        aria-label="Toggle Menu"
-      >
-        <div className="burger-lines">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
+      <Magnetic factor={0.35} textFactor={0.4}>
+        <button
+          className={`floating-menu-btn ${drawerOpen ? "active" : ""}`}
+          onClick={() => setDrawerOpen(!drawerOpen)}
+          aria-label="Toggle Menu"
+        >
+          <div className="burger-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </Magnetic>
 
       {/* Backdrop */}
       <div
@@ -585,15 +667,17 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
 
         <div className="drawer-footer">
           <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-            <a
-              href={CV_FILE_PATH}
-              download="Mariam_Ahmed_Elgohr_CV.pdf"
-              className="action-pill-btn"
-              style={{ background: "#455ce9", color: "#fff", borderColor: "#455ce9" }}
-            >
-              <i className="fa-solid fa-file-arrow-down"></i>
-              <span>{t.cvBtn}</span>
-            </a>
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <a
+                href={CV_FILE_PATH}
+                download="Mariam_Ahmed_Elgohr_CV.pdf"
+                className="action-pill-btn"
+                style={{ background: "#455ce9", color: "#fff", borderColor: "#455ce9" }}
+              >
+                <i className="fa-solid fa-file-arrow-down"></i>
+                <span>{t.cvBtn}</span>
+              </a>
+            </Magnetic>
           </div>
 
           <div className="drawer-socials">
@@ -659,25 +743,31 @@ function Hero({ lang }) {
           <div>
             <p className="hero-statement-text">{t.statement}</p>
             <div className="hero-cta-strip" style={{ marginTop: "2.5rem" }}>
-              <a href="#projects" className="btn-magnetic btn-magnetic-primary">
-                <span>{t.ctaWork}</span>
-                <i className="fa-solid fa-arrow-down-right"></i>
-              </a>
+              <Magnetic factor={0.3} textFactor={0.35}>
+                <a href="#projects" className="btn-magnetic btn-magnetic-primary">
+                  <span>{t.ctaWork}</span>
+                  <i className="fa-solid fa-arrow-down-right"></i>
+                </a>
+              </Magnetic>
 
-              <a
-                href={CV_FILE_PATH}
-                download="Mariam_Ahmed_Elgohr_CV.pdf"
-                className="btn-magnetic btn-magnetic-outline"
-                title="Download CV"
-              >
-                <i className="fa-solid fa-file-arrow-down"></i>
-                <span>{t.ctaCV}</span>
-              </a>
+              <Magnetic factor={0.3} textFactor={0.35}>
+                <a
+                  href={CV_FILE_PATH}
+                  download="Mariam_Ahmed_Elgohr_CV.pdf"
+                  className="btn-magnetic btn-magnetic-outline"
+                  title="Download CV"
+                >
+                  <i className="fa-solid fa-file-arrow-down"></i>
+                  <span>{t.ctaCV}</span>
+                </a>
+              </Magnetic>
 
-              <a href="#contact" className="btn-magnetic btn-magnetic-outline">
-                <span>{t.ctaContact}</span>
-                <i className="fa-regular fa-envelope"></i>
-              </a>
+              <Magnetic factor={0.3} textFactor={0.35}>
+                <a href="#contact" className="btn-magnetic btn-magnetic-outline">
+                  <span>{t.ctaContact}</span>
+                  <i className="fa-regular fa-envelope"></i>
+                </a>
+              </Magnetic>
             </div>
           </div>
 
@@ -1300,14 +1390,16 @@ function Contact({ lang }) {
           <h2 className="contact-huge-headline">{t.headline}</h2>
 
           {/* Dennis Snellenberg Giant Magnetic Circle Button */}
-          <a
-            href="mailto:mariamahmedelgohr@gmail.com"
-            className="btn-giant-circle"
-            title="Send Email"
-          >
-            <i className="fa-solid fa-arrow-up-right-from-square"></i>
-            <span>{t.ctaCircle}</span>
-          </a>
+          <Magnetic factor={0.45} textFactor={0.4} rotateFactor={0.06}>
+            <a
+              href="mailto:mariamahmedelgohr@gmail.com"
+              className="btn-giant-circle"
+              title="Send Email"
+            >
+              <i className="fa-solid fa-arrow-up-right-from-square"></i>
+              <span>{t.ctaCircle}</span>
+            </a>
+          </Magnetic>
         </div>
 
         {/* Channels Grid */}
@@ -1355,7 +1447,6 @@ function Contact({ lang }) {
             <span>Cairo, Egypt</span>
             <CairoClock />
           </div>
-          <div>{f.designed}</div>
         </div>
       </div>
     </footer>
