@@ -802,80 +802,164 @@ function InfiniteMarquee({ items, lang }) {
 }
 
 // ==========================================================================
-// 5. HERO SECTION
+// 5. HERO SECTION (Dennis Snellenberg Full-Bleed 100vh Architecture)
 // ==========================================================================
 function Hero({ lang }) {
   const t = CONTENT[lang].hero;
-  const marqueeItems = CONTENT[lang].marquee;
+  const heroRef = useRef(null);
+  const imageRef = useRef(null);
+  const nameRef = useRef(null);
+  const curveRef = useRef(null);
+
+  useEffect(() => {
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Full-bleed background image parallax scrub
+      if (imageRef.current && heroRef.current) {
+        gsap.to(imageRef.current, {
+          yPercent: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.5
+          }
+        });
+      }
+
+      // 2. Horizontal name scrub with velocity/direction
+      if (nameRef.current && heroRef.current) {
+        const nameWrap = nameRef.current.querySelector(".name-wrap");
+        if (nameWrap) {
+          gsap.to(nameWrap, {
+            xPercent: lang === "ar" ? 22 : -22,
+            ease: "none",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.5
+            }
+          });
+        }
+      }
+
+      // 3. Dennis Snellenberg physical curved section divider flattening
+      if (curveRef.current && heroRef.current) {
+        gsap.to(curveRef.current, {
+          height: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "70% top",
+            end: "bottom top",
+            scrub: 0.5
+          }
+        });
+      }
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, [lang]);
+
+  const tickerName = t.name;
 
   return (
-    <section id="hero" className="snellenberg-hero">
-      <div className="container">
-        <div className="hero-editorial-top">
-          <div className="hero-location-pill">
+    <section id="hero" ref={heroRef} className="snellenberg-hero home-header">
+      {/* Full-Bleed Cinematic Portrait Background with Parallax */}
+      <div className="personal-image" ref={imageRef}>
+        <img
+          src="assets/hero/mariam_elgohr_hero.jpg"
+          alt="Mariam Ahmed Elgohr"
+          className="personal-image-img"
+        />
+        <div className="personal-image-overlay"></div>
+      </div>
+
+      {/* Floating Content Layer (Dennis Snellenberg Hierarchy) */}
+      <div className="container hero-content-layer">
+        {/* Top Status Hanger */}
+        <div className="hero-top-hanger">
+          <div className="hanger-pill">
             <span className="live-pulse-dot"></span>
-            <span>Located in {t.location}</span>
+            <span>{t.location}</span>
             <CairoClock />
           </div>
 
-          <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-            DEPI AI Fellowship
+          <span className="hero-fellowship-tag">
+            {lang === "ar" ? "زميلة مبادرة رواد مصر الرقمية DEPI" : "DEPI AI Fellowship"}
           </span>
         </div>
 
-        <h1 className="hero-title-main">
-          {t.headlinePre} <br />
-          <span className="role-italic">{t.headlinePost}</span>
-        </h1>
-
-        <div className="hero-editorial-grid">
-          <div>
-            <p className="hero-statement-text">{t.statement}</p>
-            <div className="hero-cta-strip" style={{ marginTop: "2.5rem" }}>
-              <Magnetic factor={0.3} textFactor={0.35}>
-                <a href="#projects" className="btn-magnetic btn-magnetic-primary">
-                  <span>{t.ctaWork}</span>
-                  <i className="fa-solid fa-arrow-down-right"></i>
-                </a>
-              </Magnetic>
-
-              <Magnetic factor={0.3} textFactor={0.35}>
-                <a
-                  href={CV_FILE_PATH}
-                  download="Mariam_Ahmed_Elgohr_CV.pdf"
-                  className="btn-magnetic btn-magnetic-outline"
-                  title="Download CV"
-                >
-                  <i className="fa-solid fa-file-arrow-down"></i>
-                  <span>{t.ctaCV}</span>
-                </a>
-              </Magnetic>
-
-              <Magnetic factor={0.3} textFactor={0.35}>
-                <a href="#contact" className="btn-magnetic btn-magnetic-outline">
-                  <span>{t.ctaContact}</span>
-                  <i className="fa-regular fa-envelope"></i>
-                </a>
-              </Magnetic>
+        {/* Intro Lead with Circular Arrow Icon, Statement & Magnetic CTAs */}
+        <div className="hero-intro-lead">
+          <div className="header-above-h4">
+            <div className="arrow-icon">
+              <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-left" : "fa-arrow-down-right"}`}></i>
             </div>
+            <h4>
+              {lang === "ar" ? (
+                <>
+                  <span>{t.name}</span> — {t.headlinePre} {t.headlinePost}
+                </>
+              ) : (
+                <>
+                  <span>{t.greeting} {t.name}</span> — {t.headlinePre} {t.headlinePost}
+                </>
+              )}
+            </h4>
           </div>
 
-          <div className="hero-portrait-card">
-            <img
-              src="assets/hero/mariam_elgohr_hero.jpg"
-              alt="Mariam Ahmed Elgohr"
-              className="hero-portrait-img"
-            />
-            <div className="hero-portrait-badge">
-              <span className="live-pulse-dot"></span>
-              <span>DEPI AI Fellow</span>
-            </div>
+          <p className="hero-statement-text">{t.statement}</p>
+
+          <div className="hero-cta-strip">
+            <Magnetic factor={0.3} textFactor={0.35}>
+              <a href="#projects" className="btn-magnetic btn-magnetic-primary">
+                <span>{t.ctaWork}</span>
+                <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-left" : "fa-arrow-down-right"}`}></i>
+              </a>
+            </Magnetic>
+
+            <Magnetic factor={0.3} textFactor={0.35}>
+              <a
+                href={CV_FILE_PATH}
+                download="Mariam_Ahmed_Elgohr_CV.pdf"
+                className="btn-magnetic btn-magnetic-outline"
+                title="Download CV"
+              >
+                <i className="fa-solid fa-file-arrow-down"></i>
+                <span>{t.ctaCV}</span>
+              </a>
+            </Magnetic>
+
+            <Magnetic factor={0.3} textFactor={0.35}>
+              <a href="#contact" className="btn-magnetic btn-magnetic-outline">
+                <span>{t.ctaContact}</span>
+                <i className="fa-regular fa-envelope"></i>
+              </a>
+            </Magnetic>
           </div>
         </div>
       </div>
 
-      {/* Infinite Horizontal Typography Ticker */}
-      <InfiniteMarquee items={marqueeItems} lang={lang} />
+      {/* Dennis Snellenberg Signature Giant Name Ticker */}
+      <div className="big-name" ref={nameRef} aria-hidden="true">
+        <div className="name-h1">
+          <div className="name-wrap">
+            <h1>{tickerName} <span className="spacer">—</span></h1>
+            <h1>{tickerName} <span className="spacer">—</span></h1>
+            <h1>{tickerName} <span className="spacer">—</span></h1>
+            <h1>{tickerName} <span className="spacer">—</span></h1>
+          </div>
+        </div>
+      </div>
+
+      {/* Dennis Snellenberg Signature Physical Curved Section Divider */}
+      <div className="rounded-div-wrap bottom" ref={curveRef}>
+        <div className="rounded-div"></div>
+      </div>
     </section>
   );
 }
@@ -1475,9 +1559,30 @@ function Contact({ lang }) {
   const t = CONTENT[lang].contact;
   const s = CONTENT[lang].spiritual;
   const f = CONTENT[lang].footer;
+  const contactRef = useRef(null);
+  const footerCurveRef = useRef(null);
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    const ctx = gsap.context(() => {
+      if (footerCurveRef.current && contactRef.current) {
+        gsap.to(footerCurveRef.current, {
+          height: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: contactRef.current,
+            start: "top 95%",
+            end: "top 35%",
+            scrub: 0.5
+          }
+        });
+      }
+    }, contactRef);
+    return () => ctx.revert();
+  }, [lang]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -1490,7 +1595,12 @@ function Contact({ lang }) {
   };
 
   return (
-    <footer id="contact" className="snellenberg-contact-cta">
+    <footer id="contact" ref={contactRef} className="snellenberg-contact-cta">
+      {/* Dennis Snellenberg Physical Curved Section Divider entering footer */}
+      <div className="footer-rounded-div-wrap" ref={footerCurveRef}>
+        <div className="rounded-div"></div>
+      </div>
+
       <div className="container">
         <div className="editorial-section-tag">
           <span className="editorial-tag-dot"></span>
