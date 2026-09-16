@@ -672,20 +672,49 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
     { href: "#contact", index: "07", label: t.contact }
   ];
 
+  const handleNavClick = (e, href) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setDrawerOpen(false);
+    if (!href || !href.startsWith("#")) return;
+    const targetId = href.substring(1);
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
+    if (window.lenis) {
+      window.lenis.scrollTo(targetEl, {
+        duration: 1.4,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        offset: 0
+      });
+    } else {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <>
       <header className={`snellenberg-header ${scrolled ? "header-hidden" : ""}`}>
         <div className="container header-content">
-          <a href="#hero" className="brand-monogram">
+          <a
+            href="#hero"
+            className="brand-monogram"
+            onClick={(e) => handleNavClick(e, "#hero")}
+          >
             <span className="brand-dot"></span>
             <span>© Code by Mariam</span>
           </a>
 
           <div className="header-nav-group">
             <ul className="header-links">
-              <li className="header-link-item"><a href="#projects">{t.projects}</a></li>
-              <li className="header-link-item"><a href="#about">{t.about}</a></li>
-              <li className="header-link-item"><a href="#contact">{t.contact}</a></li>
+              <li className="header-link-item">
+                <a href="#projects" onClick={(e) => handleNavClick(e, "#projects")}>{t.projects}</a>
+              </li>
+              <li className="header-link-item">
+                <a href="#about" onClick={(e) => handleNavClick(e, "#about")}>{t.about}</a>
+              </li>
+              <li className="header-link-item">
+                <a href="#contact" onClick={(e) => handleNavClick(e, "#contact")}>{t.contact}</a>
+              </li>
             </ul>
 
             <div className="header-actions">
@@ -745,7 +774,7 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
           <ul className="drawer-links">
             {navLinks.map((item) => (
               <li key={item.index} className="drawer-link-item">
-                <a href={item.href} onClick={() => setDrawerOpen(false)}>
+                <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                   <span className="drawer-link-index">{item.index}</span>
                   <span>{item.label}</span>
                 </a>
@@ -879,7 +908,7 @@ function Hero({ lang }) {
     <section id="hero" ref={heroRef} className="snellenberg-hero home-header">
       {/* Full-Bleed Studio Portrait Background (Seamless on Desktop, Original Full-Bleed on Mobile) */}
       <div className="personal-image" ref={imageRef}>
-        <picture>
+        <picture className="personal-image-picture">
           <source media="(max-width: 768px)" srcSet="assets/hero/mariam_elgohr_hero.jpg" />
           <img
             src="assets/hero/mariam_elgohr_hero_seamless.png"
@@ -1113,29 +1142,78 @@ function JourneyTimeline({ lang }) {
 function Projects({ lang }) {
   const t = CONTENT[lang].projects;
   const [modalActive, setModalActive] = useState(false);
-  const [activeProject, setActiveProject] = useState(t.items[0]);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [expandedMobile, setExpandedMobile] = useState(null);
   const modalRef = useRef(null);
+  const sliderTrackRef = useRef(null);
+  const textTrackRef = useRef(null);
+  const xToRef = useRef(null);
+  const yToRef = useRef(null);
 
-  const handleMouseMove = useCallback((e) => {
-    if (modalRef.current) {
-      if (window.gsap) {
-        gsap.to(modalRef.current, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.35,
-          ease: "power2.out",
-          overwrite: "auto"
-        });
-      } else {
-        modalRef.current.style.left = `${e.clientX}px`;
-        modalRef.current.style.top = `${e.clientY}px`;
-      }
+  // Initialize mouse follower with gsap.quickTo
+  useEffect(() => {
+    if (modalRef.current && window.gsap) {
+      gsap.set(modalRef.current, { xPercent: -50, yPercent: -50 });
+      xToRef.current = gsap.quickTo(modalRef.current, "x", { duration: 0.4, ease: "power3.out" });
+      yToRef.current = gsap.quickTo(modalRef.current, "y", { duration: 0.4, ease: "power3.out" });
     }
   }, []);
 
-  const handleMouseEnterRow = (project) => {
-    setActiveProject(project);
+  // Animate modal open/close with scale and opacity
+  useEffect(() => {
+    if (!window.gsap || !modalRef.current) return;
+    if (modalActive) {
+      gsap.to(modalRef.current, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.35,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+    } else {
+      gsap.to(modalRef.current, {
+        scale: 0.5,
+        opacity: 0,
+        duration: 0.28,
+        ease: "power2.in",
+        overwrite: "auto"
+      });
+    }
+  }, [modalActive]);
+
+  // Dennis Snellenberg Film Reel scrolling animation when activeProjectIndex changes
+  useEffect(() => {
+    if (!window.gsap) return;
+    if (sliderTrackRef.current) {
+      gsap.to(sliderTrackRef.current, {
+        yPercent: -activeProjectIndex * 100,
+        duration: 0.5,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+    }
+    if (textTrackRef.current) {
+      gsap.to(textTrackRef.current, {
+        yPercent: -activeProjectIndex * 100,
+        duration: 0.5,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+    }
+  }, [activeProjectIndex]);
+
+  const handleMouseMove = useCallback((e) => {
+    if (xToRef.current && yToRef.current) {
+      xToRef.current(e.clientX);
+      yToRef.current(e.clientY);
+    } else if (modalRef.current) {
+      modalRef.current.style.left = `${e.clientX}px`;
+      modalRef.current.style.top = `${e.clientY}px`;
+    }
+  }, []);
+
+  const handleMouseEnterRow = (idx) => {
+    setActiveProjectIndex(idx);
     setModalActive(true);
   };
 
@@ -1157,11 +1235,11 @@ function Projects({ lang }) {
         </div>
 
         <div className="projects-rows-table">
-          {t.items.map((p) => (
+          {t.items.map((p, idx) => (
             <div
               key={p.id}
               className="project-row"
-              onMouseEnter={() => handleMouseEnterRow(p)}
+              onMouseEnter={() => handleMouseEnterRow(idx)}
               onMouseLeave={handleMouseLeaveRow}
               onClick={() => setExpandedMobile(expandedMobile === p.id ? null : p.id)}
             >
@@ -1206,23 +1284,36 @@ function Projects({ lang }) {
         </div>
       </div>
 
-      {/* Floating Modal Preview (Desktop Mouse Follower - Dennis Snellenberg Signature) */}
+      {/* Floating Modal Preview (Desktop Mouse Follower - Dennis Snellenberg Vertical Sliding Reel) */}
       <div
         ref={modalRef}
         className={`project-floating-modal ${modalActive ? "active" : ""}`}
       >
-        <div className="modal-img-wrap">
-          <img
-            src={activeProject.image}
-            alt={activeProject.title}
-            className="modal-project-img"
-          />
+        <div className="modal-slider-wrap">
+          <div ref={sliderTrackRef} className="modal-slider-track">
+            {t.items.map((p, idx) => (
+              <div key={p.id || idx} className="modal-slider-slide">
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  className="modal-project-img"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="modal-inner-overlay">
-          <div className="modal-inner-tag">{activeProject.type}</div>
-          <h4 className="modal-inner-title">{activeProject.title}</h4>
-          <div style={{ fontSize: "0.85rem", color: "#38bdf8", fontFamily: "var(--font-mono)" }}>
-            {activeProject.metric}
+
+        {/* Sliding Text Overlay Track */}
+        <div className="modal-text-slider-wrap">
+          <div ref={textTrackRef} className="modal-text-slider-track">
+            {t.items.map((p, idx) => (
+              <div key={p.id || idx} className="modal-text-slide">
+                <div className="modal-inner-tag">{p.type}</div>
+                <h4 className="modal-inner-title">{p.title}</h4>
+                <div className="modal-inner-metric">{p.metric}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -1602,7 +1693,19 @@ function Contact({ lang }) {
     <>
       {/* Above-footer More Work Button (Dennis Snellenberg Screenshot 3) */}
       <div className="footer-more-work-container">
-        <a href="#projects" className="btn-more-work">
+        <a
+          href="#projects"
+          className="btn-more-work"
+          onClick={(e) => {
+            if (e) e.preventDefault();
+            const el = document.getElementById("projects");
+            if (el && window.lenis) {
+              window.lenis.scrollTo(el, { duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+            } else if (el) {
+              el.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        >
           <span>{lang === "ar" ? "المزيد من المشاريع" : "More work"} <sup>3</sup></span>
         </a>
       </div>
@@ -1657,18 +1760,26 @@ function Contact({ lang }) {
 
           {/* Contact Pills Row (Screenshot 3) */}
           <div className="contact-pills-row">
-            <a href="mailto:mariamahmedelgohr@gmail.com" className="contact-pill-link">
-              mariamahmedelgohr@gmail.com
-            </a>
-            <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer" className="contact-pill-link">
-              +20 128 569 4985
-            </a>
-            <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer" className="contact-pill-link">
-              LinkedIn ↗
-            </a>
-            <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer" className="contact-pill-link">
-              GitHub ↗
-            </a>
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <a href="mailto:mariamahmedelgohr@gmail.com" className="contact-pill-link">
+                mariamahmedelgohr@gmail.com
+              </a>
+            </Magnetic>
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer" className="contact-pill-link">
+                +20 128 569 4985
+              </a>
+            </Magnetic>
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer" className="contact-pill-link">
+                LinkedIn ↗
+              </a>
+            </Magnetic>
+            <Magnetic factor={0.25} textFactor={0.3}>
+              <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer" className="contact-pill-link">
+                GitHub ↗
+              </a>
+            </Magnetic>
           </div>
 
         {/* Dignified Quranic Verse */}
@@ -1679,11 +1790,22 @@ function Contact({ lang }) {
 
         {/* Bottom Bar */}
         <div className="editorial-footer-bar">
-          <div>{f.rights}</div>
+          <div className="footer-rights">{f.rights}</div>
           <div className="footer-local-time">
             <span className="live-pulse-dot"></span>
             <span>Cairo, Egypt</span>
             <CairoClock />
+          </div>
+          <div className="footer-social-links">
+            <Magnetic factor={0.2} textFactor={0.25}>
+              <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer" className="footer-social-item">LinkedIn</a>
+            </Magnetic>
+            <Magnetic factor={0.2} textFactor={0.25}>
+              <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer" className="footer-social-item">GitHub</a>
+            </Magnetic>
+            <Magnetic factor={0.2} textFactor={0.25}>
+              <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer" className="footer-social-item">WhatsApp</a>
+            </Magnetic>
           </div>
         </div>
       </div>
@@ -1729,22 +1851,47 @@ function App() {
         gestureOrientation: "vertical"
       });
 
-      function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
+      window.lenis = lenis;
 
-      if (window.ScrollTrigger) {
+      let rafId;
+      if (window.ScrollTrigger && window.gsap) {
         lenis.on("scroll", ScrollTrigger.update);
         gsap.ticker.add((time) => {
           lenis.raf(time * 1000);
         });
         gsap.ticker.lagSmoothing(0);
+      } else {
+        function raf(time) {
+          lenis.raf(time);
+          rafId = requestAnimationFrame(raf);
+        }
+        rafId = requestAnimationFrame(raf);
       }
 
+      // Smooth scroll delegate for all in-page hash anchors
+      const handleAnchorClick = (e) => {
+        const anchor = e.target.closest('a[href^="#"]');
+        if (!anchor) return;
+        const href = anchor.getAttribute("href");
+        if (!href || href === "#") return;
+        const targetId = href.slice(1);
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          lenis.scrollTo(targetEl, {
+            duration: 1.4,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            offset: 0
+          });
+        }
+      };
+      document.addEventListener("click", handleAnchorClick);
+
       return () => {
+        document.removeEventListener("click", handleAnchorClick);
+        if (rafId) cancelAnimationFrame(rafId);
         lenis.destroy();
+        window.lenis = null;
       };
     }
   }, []);
