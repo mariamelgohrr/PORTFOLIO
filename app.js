@@ -1,5 +1,13 @@
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
+// Instant Hero Image Memory Pre-decoder (Zero Wait Time)
+if (typeof window !== "undefined") {
+  const isMob = window.innerWidth <= 768;
+  const preImg = new Image();
+  preImg.src = isMob ? "assets/hero/mariam_elgohr_hero.webp" : "assets/hero/mariam_elgohr_hero_seamless.webp";
+  if (preImg.decode) preImg.decode().catch(() => {});
+}
+
 // CV File Path constant matching directory
 const CV_FILE_PATH = "MARIAM%20AHMED%20MUSTAFA%20ELGOHR%20.pdf";
 
@@ -91,7 +99,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
-          image: "assets/projects/smartstay_preview.jpg",
+          image: "assets/projects/smartstay_preview.webp",
           type: "Regression & Rental Forecasting",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "Regression engine engineered with Python and Scikit-Learn to forecast real-time property rental prices based on geospatial markers, capacity metrics, and seasonal demand swings.",
@@ -103,7 +111,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
-          image: "assets/projects/visionai_preview.jpg",
+          image: "assets/projects/visionai_preview.webp",
           type: "Supervised Computer Vision",
           metric: "Accuracy: 94.8% | Top-1: 5.2%",
           desc: "Supervised classification pipeline for multi-category image categorization, featuring automated image augmentation, feature extraction, confusion matrix visualization, and precision-recall trade-off metrics.",
@@ -115,7 +123,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
-          image: "assets/projects/datapulse_preview.jpg",
+          image: "assets/projects/datapulse_preview.webp",
           type: "Classification & Business Intelligence",
           metric: "AUC-ROC: 0.912 | Recall: 89.4%",
           desc: "In-depth exploratory data analysis and predictive classification model identifying high-risk customer churn patterns with automated feature importance evaluation.",
@@ -281,7 +289,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
-          image: "assets/projects/smartstay_preview.jpg",
+          image: "assets/projects/smartstay_preview.webp",
           type: "نموذج انحدار وتنبؤ بأسعار الإيجار",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "نموذج انحدار مبني باستخدام Python وScikit-Learn للتنبؤ بالأسعار الحقيقية لتأجير العقارات بناءً على الموقع الجغرافي وخصائص الغرف والخدمات ومواسم الطلب.",
@@ -293,7 +301,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
-          image: "assets/projects/visionai_preview.jpg",
+          image: "assets/projects/visionai_preview.webp",
           type: "تصنيف الصور بالتعلم الخاضع للإشراف",
           metric: "الدقة: 94.8% | خطأ أعلى-1: 5.2%",
           desc: "خط معالجة ذكي لتصنيف مجموعات الصور متعددة الفئات، يشمل تكثيف البيانات بصرياً، استخراج الميزات، ومصفوفة الارتباك لتقييم الدقة والاستدعاء.",
@@ -305,7 +313,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
-          image: "assets/projects/datapulse_preview.jpg",
+          image: "assets/projects/datapulse_preview.webp",
           type: "تحليل استكشافي وتنبؤ باحتفاظ العملاء",
           metric: "AUC-ROC: 0.912 | استدعاء: 89.4%",
           desc: "دراسة استكشافية متعمقة (EDA) ونموذج تصنيف للتنبؤ باحتمالية تسرب العملاء والاحتفاظ بهم، مع استخراج العوامل المؤثرة لتزويد صناع القرار بتوصيات فورية.",
@@ -408,6 +416,12 @@ function DennisPreloader({ onFinish }) {
   const preloaderRef = useRef(null);
 
   useEffect(() => {
+    // Pre-decode hero image so it is 100% loaded in GPU memory before preloader curtain lifts
+    const isMob = typeof window !== "undefined" && window.innerWidth <= 768;
+    const heroImg = new Image();
+    heroImg.src = isMob ? "assets/hero/mariam_elgohr_hero.webp" : "assets/hero/mariam_elgohr_hero_seamless.webp";
+    if (heroImg.decode) heroImg.decode().catch(() => {});
+
     let step = 0;
     const interval = setInterval(() => {
       step++;
@@ -881,27 +895,37 @@ function Hero({ lang }) {
         } : undefined}
       >
         {isMobile ? (
-          <img
-            src="assets/hero/mariam_elgohr_hero.jpg"
-            alt="Mariam Ahmed Elgohr"
-            className="personal-image-img"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 18%",
-              display: "block"
-            }}
-          />
-        ) : (
-          <picture className="personal-image-picture">
+          <picture className="personal-image-picture" style={{ width: "100%", height: "100%", display: "block" }}>
+            <source srcSet="assets/hero/mariam_elgohr_hero.webp" type="image/webp" />
             <img
-              src="assets/hero/mariam_elgohr_hero_seamless.png"
+              src="assets/hero/mariam_elgohr_hero.webp"
               alt="Mariam Ahmed Elgohr"
               className="personal-image-img"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 18%",
+                display: "block"
+              }}
+            />
+          </picture>
+        ) : (
+          <picture className="personal-image-picture">
+            <source srcSet="assets/hero/mariam_elgohr_hero_seamless.webp" type="image/webp" />
+            <img
+              src="assets/hero/mariam_elgohr_hero_seamless.webp"
+              alt="Mariam Ahmed Elgohr"
+              className="personal-image-img"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </picture>
         )}
@@ -1725,9 +1749,11 @@ function Contact({ lang }) {
               <div className="contact-title-line contact-title-line-1">
                 <span className="contact-avatar-wrap">
                   <img
-                    src="assets/hero/mariam_elgohr_hero.jpg"
+                    src="assets/hero/mariam_elgohr_hero.webp"
                     alt="Mariam Ahmed Elgohr"
                     className="contact-avatar-img"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </span>
                 <h2 className="contact-title-text">{lang === "ar" ? "لنعمل" : "Let's work"}</h2>

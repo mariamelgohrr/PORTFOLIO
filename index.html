@@ -23,6 +23,10 @@
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="assets/hero/mariam_elgohr_hero.jpg" />
 
+  <!-- High-Priority Instant Preload for Hero Images -->
+  <link rel="preload" as="image" href="assets/hero/mariam_elgohr_hero.webp" type="image/webp" fetchpriority="high" media="(max-width: 768px)" />
+  <link rel="preload" as="image" href="assets/hero/mariam_elgohr_hero_seamless.webp" type="image/webp" fetchpriority="high" media="(min-width: 769px)" />
+
   <!-- Google Fonts: Inter, Fira Code, Cairo, and Amiri for the spiritual verse -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -53,13 +57,13 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!-- Portfolio Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=5.0" />
+  <link rel="stylesheet" href="styles.css?v=6.0" />
 </head>
 <body>
   <!-- React App Mount Point -->
   <div id="root"></div>
 
   <!-- React Application Logic -->
-  <script type="text/babel" src="app.js?v=5.0"></script>
+  <script type="text/babel" src="app.js?v=6.0"></script>
 </body>
 </html>
