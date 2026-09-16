@@ -877,13 +877,16 @@ function Hero({ lang }) {
 
   return (
     <section id="hero" ref={heroRef} className="snellenberg-hero home-header">
-      {/* Full-Bleed Studio Portrait Background (Screenshot 1) */}
+      {/* Full-Bleed Studio Portrait Background (Seamless on Desktop, Original Full-Bleed on Mobile) */}
       <div className="personal-image" ref={imageRef}>
-        <img
-          src="assets/hero/mariam_elgohr_hero.jpg"
-          alt="Mariam Ahmed Elgohr"
-          className="personal-image-img"
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="assets/hero/mariam_elgohr_hero.jpg" />
+          <img
+            src="assets/hero/mariam_elgohr_hero_seamless.png"
+            alt="Mariam Ahmed Elgohr"
+            className="personal-image-img"
+          />
+        </picture>
       </div>
 
       {/* Left Capsule Pill (Dennis Snellenberg Screenshot 1) */}
