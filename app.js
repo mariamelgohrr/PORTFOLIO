@@ -812,13 +812,19 @@ function Hero({ lang }) {
   const heroRef = useRef(null);
   const imageRef = useRef(null);
   const nameRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (!window.gsap || !window.ScrollTrigger) return;
 
     const ctx = gsap.context(() => {
       // 1. Studio portrait subtle parallax scrub (Desktop only to prevent mobile displacement)
-      const isMobile = window.innerWidth <= 768;
       if (!isMobile && imageRef.current && heroRef.current) {
         gsap.to(imageRef.current, {
           yPercent: 10,
@@ -851,22 +857,54 @@ function Hero({ lang }) {
     }, heroRef);
 
     return () => ctx.revert();
-  }, [lang]);
+  }, [lang, isMobile]);
 
   const tickerName = t.name;
 
   return (
     <section id="hero" ref={heroRef} className="snellenberg-hero home-header">
       {/* Full-Bleed Studio Portrait Background (Seamless on Desktop, Original Full-Bleed on Mobile) */}
-      <div className="personal-image" ref={imageRef}>
-        <picture className="personal-image-picture">
-          <source media="(max-width: 768px)" srcSet="assets/hero/mariam_elgohr_hero.jpg" />
+      <div
+        className="personal-image"
+        ref={imageRef}
+        style={isMobile ? {
+          position: "absolute",
+          inset: 0,
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "block",
+          transform: "none",
+          zIndex: 1,
+          overflow: "hidden"
+        } : undefined}
+      >
+        {isMobile ? (
           <img
-            src="assets/hero/mariam_elgohr_hero_seamless.png"
+            src="assets/hero/mariam_elgohr_hero.jpg"
             alt="Mariam Ahmed Elgohr"
             className="personal-image-img"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 18%",
+              display: "block"
+            }}
           />
-        </picture>
+        ) : (
+          <picture className="personal-image-picture">
+            <img
+              src="assets/hero/mariam_elgohr_hero_seamless.png"
+              alt="Mariam Ahmed Elgohr"
+              className="personal-image-img"
+            />
+          </picture>
+        )}
       </div>
 
       {/* Left Capsule Pill (Dennis Snellenberg Screenshot 1) */}
