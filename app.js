@@ -852,12 +852,12 @@ function Hero({ lang }) {
         });
       }
 
-      // 2. Horizontal name scrub with velocity/direction
+      // 2. Horizontal name scrub with velocity/direction (targets .name-h1)
       if (nameRef.current && heroRef.current) {
-        const nameWrap = nameRef.current.querySelector(".name-wrap");
-        if (nameWrap) {
-          gsap.to(nameWrap, {
-            xPercent: lang === "ar" ? 22 : -22,
+        const nameH1 = nameRef.current.querySelector(".name-h1");
+        if (nameH1) {
+          gsap.to(nameH1, {
+            xPercent: lang === "ar" ? 15 : -15,
             ease: "none",
             scrollTrigger: {
               trigger: heroRef.current,
@@ -1713,7 +1713,9 @@ function App() {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         wheelMultiplier: 1,
-        touchMultiplier: 1.4
+        touchMultiplier: 1.4,
+        orientation: "vertical",
+        gestureOrientation: "vertical"
       });
 
       function raf(time) {
