@@ -265,17 +265,30 @@ body.cursor-project .custom-cursor-ring {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.8rem 0;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  background: rgba(20, 21, 22, 0.75);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: clamp(1.8rem, 3.5vh, 2.8rem) 0;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
   transition: transform 0.45s var(--ease-snellenberg), opacity 0.3s ease;
 }
 
 body.light-theme .snellenberg-header {
-  background: rgba(244, 244, 245, 0.85);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+.snellenberg-header .brand-monogram,
+.snellenberg-header .header-link-item a,
+.snellenberg-header .action-pill-btn {
+  color: #ffffff !important;
+}
+
+.snellenberg-header .action-pill-btn {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 .snellenberg-header.header-hidden {
@@ -563,154 +576,152 @@ body.light-theme .action-pill-btn:hover {
 }
 
 /* ==========================================================================
-   DENNIS SNELLENBERG FULL-BLEED HERO & INTERACTION ARCHITECTURE
+   DENNIS SNELLENBERG FULL-BLEED HERO (Matches Reference Screenshot 1)
    ========================================================================== */
 .snellenberg-hero.home-header {
   position: relative;
   min-height: 100vh;
   height: 100vh;
+  height: 100dvh;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   overflow: hidden;
-  background-color: #141516;
+  background-color: #8c9298; /* Seamless studio grey matching Mariam's photo */
 }
 
 /* Full-bleed Portrait Photo taking up the entire section */
 .home-header .personal-image {
   position: absolute;
-  top: -10%;
-  left: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  height: 120%;
+  height: 100%;
   z-index: 1;
   pointer-events: none;
   will-change: transform;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .home-header .personal-image-img {
-  width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  filter: brightness(0.85) contrast(1.05);
+  max-height: 100vh;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: brightness(0.98) contrast(1.02);
 }
 
-.home-header .personal-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(20, 21, 22, 0.6) 0%,
-    rgba(20, 21, 22, 0.15) 30%,
-    rgba(20, 21, 22, 0.4) 60%,
-    rgba(20, 21, 22, 0.85) 85%,
-    rgba(20, 21, 22, 1) 100%
-  );
-  z-index: 2;
+@media (max-width: 768px) {
+  .home-header .personal-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 18%;
+  }
 }
 
-/* Content Layer Floating Above Full-Bleed Photo */
-.hero-content-layer {
-  position: relative;
-  z-index: 10;
+/* Left Pill (Dennis Snellenberg Signature Capsule - Screenshot 1) */
+.hero-located-pill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: #1c1d20;
+  color: #ffffff;
+  padding: 1.1rem 1.4rem 1.1rem 2.2rem;
+  border-radius: 0 100px 100px 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 15;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+[dir="rtl"] .hero-located-pill {
+  left: auto;
+  right: 0;
+  border-radius: 100px 0 0 100px;
+  padding: 1.1rem 2.2rem 1.1rem 1.4rem;
+}
+
+.located-text {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding-top: clamp(6.5rem, 12vh, 8.5rem);
-  padding-bottom: clamp(6rem, 14vh, 9rem);
-}
-
-.hero-top-hanger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 1.5rem;
-}
-
-.hanger-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.5rem 1.2rem;
-  border-radius: var(--radius-pill);
-  background: rgba(20, 21, 22, 0.7);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-hairline);
-  font-size: 0.84rem;
+  line-height: 1.25;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-.hero-fellowship-tag {
-  font-family: var(--font-mono);
+.located-text span:first-child {
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.85rem;
-  color: var(--accent-cyan);
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-pill);
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
-.hero-intro-lead {
-  max-width: 650px;
-  margin-top: auto;
-}
-
-.header-above-h4 {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1.2rem;
-}
-
-.header-above-h4 .arrow-icon {
-  width: 42px;
-  height: 42px;
+.globe-circle {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--text-primary);
-  color: var(--bg-canvas);
+  background: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.header-above-h4 h4 {
-  font-size: clamp(1.25rem, 2.5vw, 1.85rem);
-  font-weight: 500;
+  font-size: 1.25rem;
   color: #ffffff;
-  line-height: 1.25;
 }
 
-.header-above-h4 h4 span {
-  font-weight: 700;
-  color: var(--accent-blue);
+.globe-circle i {
+  animation: spinGlobe 20s linear infinite;
 }
 
-.hero-statement-text {
-  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 2rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+@keyframes spinGlobe {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Dennis Snellenberg Signature Giant Name Ticker */
+/* Right Role Block (Dennis Snellenberg - Screenshot 1) */
+.hero-role-block {
+  position: absolute;
+  top: 44%;
+  right: clamp(2rem, 8vw, 9rem);
+  transform: translateY(-50%);
+  z-index: 15;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+[dir="rtl"] .hero-role-block {
+  right: auto;
+  left: clamp(2rem, 8vw, 9rem);
+  text-align: right;
+}
+
+.hero-role-arrow {
+  font-size: 2.2rem;
+  color: #ffffff;
+  display: inline-block;
+  line-height: 1;
+}
+
+.hero-role-title {
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Dennis Snellenberg Signature Giant Name Ticker (Screenshot 1 & 2) */
 .big-name {
   position: absolute;
-  bottom: clamp(1.5vh, 3vh, 5vh);
+  bottom: clamp(1rem, 2vh, 3rem);
   left: 0;
   width: 100%;
   z-index: 12;
@@ -728,25 +739,25 @@ body.light-theme .action-pill-btn:hover {
 .big-name .name-wrap {
   display: inline-flex;
   align-items: center;
-  animation: snellenbergMarquee 32s linear infinite;
+  animation: snellenbergMarquee 36s linear infinite;
   will-change: transform;
 }
 
 .big-name h1 {
-  font-size: clamp(4.5rem, 13vw, 16rem);
-  font-weight: 600;
+  font-size: clamp(5.5rem, 15vw, 18.5rem);
+  font-weight: 500;
   line-height: 0.88;
   letter-spacing: -0.035em;
   color: #ffffff;
   display: inline-flex;
   align-items: center;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .big-name .spacer {
   padding: 0 clamp(1.5rem, 3vw, 4rem);
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 @keyframes snellenbergMarquee {
@@ -758,30 +769,7 @@ body.light-theme .action-pill-btn:hover {
   animation-direction: reverse;
 }
 
-/* Dennis Snellenberg Signature Curved Section Dividers */
-.home-header .rounded-div-wrap {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: clamp(60px, 9vh, 110px);
-  overflow: hidden;
-  z-index: 20;
-  will-change: height;
-  pointer-events: none;
-}
-
-.home-header .rounded-div-wrap .rounded-div {
-  position: absolute;
-  width: 150%;
-  height: 750%;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background-color: var(--bg-canvas);
-}
-
+/* Footer Curved Section Divider (Curved only at Footer as in Screenshot 3!) */
 .footer-rounded-div-wrap {
   position: absolute;
   top: 0;
@@ -807,23 +795,64 @@ body.light-theme .action-pill-btn:hover {
   background-color: #1c1d20;
 }
 
-body.light-theme .home-header .rounded-div-wrap .rounded-div {
+/* ==========================================================================
+   DENNIS SNELLENBERG ABOUT / NARRATIVE SECTION (Screenshot 2)
+   ========================================================================== */
+.about-snellenberg-section {
+  padding: clamp(5rem, 10vh, 8.5rem) 0;
   background-color: var(--bg-canvas);
 }
 
-/* RTL Adjustments for Hero Lead */
-[dir="rtl"] .hero-intro-lead {
-  margin-left: auto;
-  margin-right: 0;
+.about-editorial-columns {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.about-main-lead h2 {
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.about-sub-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  font-size: clamp(1rem, 1.25vw, 1.18rem);
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.about-cta-strip {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .about-editorial-columns {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* RTL Adjustments for Hero & About */
+[dir="rtl"] .hero-role-block {
   text-align: right;
 }
 
-[dir="rtl"] .header-above-h4 {
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+[dir="rtl"] .about-editorial-columns {
+  text-align: right;
 }
 
-[dir="rtl"] .hero-cta-strip {
+[dir="rtl"] .about-cta-strip {
   justify-content: flex-start;
 }
 
@@ -1565,61 +1594,156 @@ body.light-theme .snellenberg-contact-cta .editorial-footer-bar {
   color: #888888;
 }
 
-.contact-giant-cta {
+/* Above-footer More Work Button (Dennis Snellenberg Screenshot 3) */
+.footer-more-work-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 5rem;
+  justify-content: center;
+  padding: 4rem 0 2rem 0;
+  background-color: var(--bg-canvas);
+}
+
+.btn-more-work {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.1rem 2.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-hairline);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: transparent;
+  transition: all 0.3s var(--ease-snellenberg);
+  text-decoration: none;
+}
+
+.btn-more-work sup {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btn-more-work:hover {
+  background-color: var(--text-primary);
+  color: var(--bg-canvas);
+  transform: scale(1.05);
+}
+
+/* Dennis Snellenberg Footer Header Block (Screenshot 3) */
+.contact-header-block {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.contact-avatar-img {
+  width: clamp(70px, 8vw, 95px);
+  height: clamp(70px, 8vw, 95px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .contact-huge-headline {
-  font-size: clamp(3rem, 9vw, 8.5rem);
-  font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.04em;
-  color: var(--text-primary);
-  margin-bottom: 3.5rem;
+  font-size: clamp(3.2rem, 9.5vw, 8.8rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  margin: 0;
 }
 
-/* Giant Magnetic Circle Button (Dennis Snellenberg Trademark) */
+.contact-arrow-indicator {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: #ffffff;
+  opacity: 0.8;
+  margin-left: auto;
+}
+
+[dir="rtl"] .contact-arrow-indicator {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* Action Zone with Hairline and Floating Circle (Screenshot 3) */
+.contact-action-zone {
+  position: relative;
+  width: 100%;
+  margin: 4.5rem 0 5rem 0;
+}
+
+.contact-hairline-separator {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.contact-circle-anchor {
+  position: absolute;
+  right: clamp(2rem, 15vw, 15rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+[dir="rtl"] .contact-circle-anchor {
+  right: auto;
+  left: clamp(2rem, 15vw, 15rem);
+}
+
 .btn-giant-circle {
-  width: clamp(160px, 20vw, 220px);
-  height: clamp(160px, 20vw, 220px);
+  width: clamp(160px, 18vw, 210px);
+  height: clamp(160px, 18vw, 210px);
   border-radius: 50%;
-  background-color: var(--accent-blue);
+  background-color: #455ce9;
   color: #ffffff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-size: clamp(1rem, 1.6vw, 1.25rem);
-  font-weight: 600;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 500;
   border: none;
   cursor: pointer;
-  box-shadow: 0 20px 50px rgba(69, 92, 233, 0.4);
+  box-shadow: 0 20px 50px rgba(69, 92, 233, 0.45);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   user-select: none;
 }
 
 .btn-giant-circle:hover {
   background-color: #3b50d5;
-  box-shadow: 0 25px 60px rgba(69, 92, 233, 0.55);
+  box-shadow: 0 25px 60px rgba(69, 92, 233, 0.6);
 }
 
-.btn-giant-circle i {
-  font-size: 1.5rem;
-}
-
-/* Contact Info & Channels */
-.contact-channels-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
-  padding: 3rem 0;
-  border-top: 1px solid var(--border-hairline);
-  border-bottom: 1px solid var(--border-hairline);
+/* Contact Pills Row (Screenshot 3) */
+.contact-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
   margin-bottom: 4rem;
+}
+
+.contact-pill-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 1.1rem 2.2rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-pill-link:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .contact-channel-item {
