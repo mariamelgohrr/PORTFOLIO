@@ -27,7 +27,7 @@ const CONTENT = {
     hero: {
       location: "Cairo, Egypt",
       greeting: "Hello, I'm",
-      name: "Mariam Ahmed Elgohr",
+      name: "Mariam Elgohr",
       headlinePre: "Machine Learning &",
       headlinePost: "Data Science Engineer",
       statement: "Bridging mathematical intuition and clean engineering logic to turn raw complex data into robust predictive pipelines and intelligent algorithms.",
@@ -192,7 +192,7 @@ const CONTENT = {
       successMsg: "Message sent successfully. I will get back to you shortly."
     },
     footer: {
-      rights: "© 2026 Mariam Ahmed Elgohr. All rights reserved."
+      rights: "© 2026 Mariam Ahmed Elgohr • Powered by curiosity and machine learning algorithms 🚀"
     }
   },
 
@@ -382,7 +382,7 @@ const CONTENT = {
       successMsg: "تم إرسال رسالتك بنجاح، وسأتواصل معك في أقرب وقت."
     },
     footer: {
-      rights: "© 2026 مريم أحمد الجحر • جميع الحقوق محفوظة."
+      rights: "© 2026 مريم أحمد الجحر • مدعومة بالشغف وفضول خوارزميات التعلم الآلي 🚀"
     }
   }
 };
