@@ -396,6 +396,273 @@ const CONTENT = {
 const CV_FILE_PATH = "MARIAM%20AHMED%20MUSTAFA%20ELGOHR%20.pdf";
 
 // ==========================================
+// 0. CINEMATIC MULTILINGUAL INTRO PRELOADER
+// ==========================================
+const GREETINGS_DATA = [
+  { text: "مرحباً", lang: "العربية", code: "AR" },
+  { text: "Hello", lang: "English", code: "EN" },
+  { text: "Bonjour", lang: "Français", code: "FR" },
+  { text: "Hola", lang: "Español", code: "ES" },
+  { text: "Ciao", lang: "Italiano", code: "IT" },
+  { text: "こんにちは", lang: "日本語", code: "JA" },
+  { text: "أهلاً بكِ في عالم الذكاء الاصطناعي", lang: "Welcome to AI", code: "AI" }
+];
+
+function IntroPreloader({ onFinish }) {
+  const [index, setIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [exiting, setExiting] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const total = GREETINGS_DATA.length;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      const pct = Math.min((step / total) * 100, 100);
+      setProgress(pct);
+
+      if (step < total) {
+        setIndex(step);
+        if (window.gsap && textRef.current) {
+          gsap.fromTo(
+            textRef.current,
+            { opacity: 0, y: 15, scale: 0.95 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "power2.out" }
+          );
+        }
+      } else {
+        clearInterval(timer);
+        setTimeout(() => {
+          setExiting(true);
+          setTimeout(() => {
+            setHidden(true);
+            if (onFinish) onFinish();
+          }, 700);
+        }, 350);
+      }
+    }, 380);
+
+    return () => clearInterval(timer);
+  }, [onFinish]);
+
+  if (hidden) return null;
+
+  const current = GREETINGS_DATA[index] || GREETINGS_DATA[0];
+
+  return (
+    <div className={`intro-preloader ${exiting ? "exiting" : ""}`}>
+      <div className="preloader-backdrop-glow"></div>
+      
+      <div className="preloader-content">
+        <div className="preloader-badge">
+          <span className="preloader-pulse-dot"></span>
+          <span>{current.code} • {current.lang}</span>
+        </div>
+
+        <div className="preloader-text-wrapper">
+          <h1 ref={textRef} className="preloader-text">
+            {current.text}
+          </h1>
+        </div>
+
+        <div className="preloader-progress-track">
+          <div className="preloader-progress-bar" style={{ width: `${progress}%` }}></div>
+        </div>
+
+        <div className="preloader-footer">
+          <span>Mariam Ahmed Elgohr</span>
+          <span className="preloader-pct">{Math.round(progress)}%</span>
+        </div>
+      </div>
+
+      <div className="preloader-curtain-top"></div>
+      <div className="preloader-curtain-bottom"></div>
+    </div>
+  );
+}
+
+// ==========================================
+// 0.1 NEURAL NETWORK CANVAS BACKGROUND
+// ==========================================
+function NeuralBackground({ theme }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animId;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    const isMobile = width < 768;
+    const count = isMobile ? 32 : 65;
+    const maxDist = isMobile ? 90 : 125;
+    const nodes = [];
+
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 2 + 1.2
+      });
+    }
+
+    let mouse = { x: null, y: null, maxDist: 110 };
+    const handleMove = (e) => {
+      const touch = e.touches ? e.touches[0] : e;
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
+    };
+    const handleLeave = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    window.addEventListener("touchmove", handleMove, { passive: true });
+    window.addEventListener("mouseleave", handleLeave);
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      const nodeColor = theme === "light" ? "rgba(121, 40, 202, 0.55)" : "rgba(168, 85, 247, 0.75)";
+      const rgb = theme === "light" ? "121, 40, 202" : "168, 85, 247";
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x += n.vx;
+        n.y += n.vy;
+
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - n.x;
+          const dy = mouse.y - n.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < mouse.maxDist) {
+            const f = (mouse.maxDist - d) / mouse.maxDist;
+            n.x -= (dx / d) * f * 1.5;
+            n.y -= (dy / d) * f * 1.5;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+        ctx.fillStyle = nodeColor;
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n.x - n2.x;
+          const dy = n.y - n2.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+
+          if (d < maxDist) {
+            const alpha = (1 - d / maxDist) * (theme === "light" ? 0.22 : 0.35);
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = `rgba(${rgb}, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("touchmove", handleMove);
+      window.removeEventListener("mouseleave", handleLeave);
+      cancelAnimationFrame(animId);
+    };
+  }, [theme]);
+
+  return <canvas id="neural-canvas" ref={canvasRef} />;
+}
+
+// ==========================================
+// 0.2 MOBILE APP FLOATING BOTTOM DOCK
+// ==========================================
+function MobileBottomNav({ lang }) {
+  const [activeTab, setActiveTab] = useState("hero");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["hero", "about", "toolkit", "projects", "contact"];
+      const scrollPos = window.scrollY + 220;
+      for (const s of sections) {
+        const el = document.getElementById(s);
+        if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+          setActiveTab(s);
+          break;
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const labels = {
+    en: { home: "Home", about: "About", toolkit: "Skills", projects: "Projects", contact: "Contact", cv: "CV" },
+    ar: { home: "الرئيسية", about: "عنّي", toolkit: "المهارات", projects: "المشاريع", contact: "تواصل", cv: "السيرة" }
+  };
+  const l = labels[lang] || labels.en;
+
+  const tabs = [
+    { id: "hero", href: "#hero", icon: "fa-solid fa-house-chimney", label: l.home },
+    { id: "about", href: "#about", icon: "fa-solid fa-user-astronaut", label: l.about },
+    { id: "toolkit", href: "#toolkit", icon: "fa-solid fa-brain", label: l.toolkit },
+    { id: "projects", href: "#projects", icon: "fa-solid fa-diagram-project", label: l.projects },
+    { id: "contact", href: "#contact", icon: "fa-solid fa-envelope", label: l.contact }
+  ];
+
+  return (
+    <nav className="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+      {tabs.map((t) => (
+        <a
+          key={t.id}
+          href={t.href}
+          className={`dock-item ${activeTab === t.id ? "active" : ""}`}
+        >
+          <i className={t.icon}></i>
+          <span>{t.label}</span>
+        </a>
+      ))}
+
+      {/* Quick CV Download Action */}
+      <a
+        href={CV_FILE_PATH}
+        download="Mariam_Ahmed_Elgohr_CV.pdf"
+        className="dock-item dock-cv-btn"
+        title="Download CV"
+      >
+        <i className="fa-solid fa-file-arrow-down"></i>
+        <span>{l.cv}</span>
+      </a>
+    </nav>
+  );
+}
+
+// ==========================================
 // 1. NAVBAR COMPONENT (With Theme Toggle)
 // ==========================================
 function Navbar({ lang, setLang, theme, toggleTheme }) {
@@ -668,8 +935,66 @@ function Hero({ lang }) {
 }
 
 // ==========================================
-// 3. METRICS STATS COUNTER
+// 3. METRICS STATS COUNTER (With Smooth Count-up Animation)
 // ==========================================
+function AnimatedStatItem({ numberStr, label }) {
+  const [displayValue, setDisplayValue] = useState(numberStr);
+  const itemRef = useRef(null);
+  const animatedRef = useRef(false);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+
+    const match = numberStr.match(/(\d+)/);
+    if (!match) {
+      setDisplayValue(numberStr);
+      return;
+    }
+
+    const targetNum = parseInt(match[1], 10);
+    const prefix = numberStr.startsWith("+") ? "+" : "";
+    const suffix = numberStr.endsWith("+") ? "+" : numberStr.endsWith("%") ? "%" : "";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !animatedRef.current) {
+          animatedRef.current = true;
+          const duration = 1600;
+          const startTime = performance.now();
+
+          const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            const currentVal = Math.floor(easeProgress * targetNum);
+            setDisplayValue(`${prefix}${currentVal}${suffix}`);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              setDisplayValue(numberStr);
+            }
+          };
+
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [numberStr]);
+
+  return (
+    <div ref={itemRef} className="stat-box">
+      <span className="stat-number">{displayValue}</span>
+      <span className="stat-label">{label}</span>
+    </div>
+  );
+}
+
 function MetricsStats({ lang }) {
   const stats = CONTENT[lang].stats;
 
@@ -678,10 +1003,7 @@ function MetricsStats({ lang }) {
       <div className="container">
         <div className="stats-grid">
           {stats.map((s, idx) => (
-            <div key={idx} className="stat-box">
-              <span className="stat-number">{s.number}</span>
-              <span className="stat-label">{s.label}</span>
-            </div>
+            <AnimatedStatItem key={idx} numberStr={s.number} label={s.label} />
           ))}
         </div>
       </div>
@@ -834,6 +1156,21 @@ function MLPlayground({ lang, theme }) {
   const [datasetSize, setDatasetSize] = useState(2500);
   const [epochs, setEpochs] = useState(30);
   const [selectedModel, setSelectedModel] = useState("rf");
+  const [isTraining, setIsTraining] = useState(false);
+
+  const handleRetrain = () => {
+    setIsTraining(true);
+    setTimeout(() => {
+      setIsTraining(false);
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 55,
+          spread: 65,
+          origin: { y: 0.65 }
+        });
+      }
+    }, 800);
+  };
 
   // Simulated Model Output Metrics
   const metrics = useMemo(() => {
@@ -1058,6 +1395,22 @@ function MLPlayground({ lang, theme }) {
                 </span>
                 <span style={{ color: "#c084fc", fontWeight: 600 }}>LR={learningRate}</span>
               </div>
+
+              {/* Re-train Simulation Action Button */}
+              <button
+                className="btn-primary"
+                onClick={handleRetrain}
+                disabled={isTraining}
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  marginTop: "1.2rem",
+                  minHeight: "46px"
+                }}
+              >
+                <i className={`fa-solid ${isTraining ? "fa-spinner fa-spin" : "fa-arrows-rotate"}`}></i>
+                <span>{isTraining ? (lang === "ar" ? "جارٍ تحسين الخوارزمية..." : "Optimizing Weights...") : t.runSim}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1071,6 +1424,14 @@ function MLPlayground({ lang, theme }) {
 // ==========================================
 function Toolkit({ lang }) {
   const t = CONTENT[lang].toolkit;
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  const filterTabs = [
+    { id: "all", label: lang === "ar" ? "كل التقنيات" : "All Stack", icon: "fa-solid fa-layer-group" },
+    { id: "cat1", label: t.cat1Title, icon: "fa-solid fa-code" },
+    { id: "cat2", label: t.cat2Title, icon: "fa-solid fa-brain" },
+    { id: "cat3", label: t.cat3Title, icon: "fa-solid fa-terminal" }
+  ];
 
   return (
     <section id="toolkit" className="section-padding">
@@ -1084,60 +1445,80 @@ function Toolkit({ lang }) {
           <p className="section-subtitle">{t.subtitle}</p>
         </div>
 
+        {/* Mobile & Desktop Segmented Filter Tabs */}
+        <div className="toolkit-filter-bar">
+          {filterTabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`toolkit-tab-btn ${activeCategory === tab.id ? "active" : ""}`}
+              onClick={() => setActiveCategory(tab.id)}
+            >
+              <i className={tab.icon}></i>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
         <div className="toolkit-categories">
           {/* Category 1 */}
-          <div className="glass-card toolkit-cat-card">
-            <div className="toolkit-header">
-              <div className="cat-icon-wrap">
-                <i className="fa-solid fa-code"></i>
-              </div>
-              <h3 className="cat-title">{t.cat1Title}</h3>
-            </div>
-            <div className="tech-pills">
-              {t.cat1Items.map((item, idx) => (
-                <div key={idx} className="tech-pill">
-                  <i className={item.icon}></i>
-                  <span>{item.name}</span>
+          {(activeCategory === "all" || activeCategory === "cat1") && (
+            <div className="glass-card toolkit-cat-card">
+              <div className="toolkit-header">
+                <div className="cat-icon-wrap">
+                  <i className="fa-solid fa-code"></i>
                 </div>
-              ))}
+                <h3 className="cat-title">{t.cat1Title}</h3>
+              </div>
+              <div className="tech-pills">
+                {t.cat1Items.map((item, idx) => (
+                  <div key={idx} className="tech-pill">
+                    <i className={item.icon}></i>
+                    <span>{item.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Category 2 */}
-          <div className="glass-card toolkit-cat-card">
-            <div className="toolkit-header">
-              <div className="cat-icon-wrap">
-                <i className="fa-solid fa-brain"></i>
-              </div>
-              <h3 className="cat-title">{t.cat2Title}</h3>
-            </div>
-            <div className="tech-pills">
-              {t.cat2Items.map((item, idx) => (
-                <div key={idx} className="tech-pill">
-                  <i className={item.icon}></i>
-                  <span>{item.name}</span>
+          {(activeCategory === "all" || activeCategory === "cat2") && (
+            <div className="glass-card toolkit-cat-card">
+              <div className="toolkit-header">
+                <div className="cat-icon-wrap">
+                  <i className="fa-solid fa-brain"></i>
                 </div>
-              ))}
+                <h3 className="cat-title">{t.cat2Title}</h3>
+              </div>
+              <div className="tech-pills">
+                {t.cat2Items.map((item, idx) => (
+                  <div key={idx} className="tech-pill">
+                    <i className={item.icon}></i>
+                    <span>{item.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Category 3 */}
-          <div className="glass-card toolkit-cat-card">
-            <div className="toolkit-header">
-              <div className="cat-icon-wrap">
-                <i className="fa-solid fa-terminal"></i>
-              </div>
-              <h3 className="cat-title">{t.cat3Title}</h3>
-            </div>
-            <div className="tech-pills">
-              {t.cat3Items.map((item, idx) => (
-                <div key={idx} className="tech-pill">
-                  <i className={item.icon}></i>
-                  <span>{item.name}</span>
+          {(activeCategory === "all" || activeCategory === "cat3") && (
+            <div className="glass-card toolkit-cat-card">
+              <div className="toolkit-header">
+                <div className="cat-icon-wrap">
+                  <i className="fa-solid fa-terminal"></i>
                 </div>
-              ))}
+                <h3 className="cat-title">{t.cat3Title}</h3>
+              </div>
+              <div className="tech-pills">
+                {t.cat3Items.map((item, idx) => (
+                  <div key={idx} className="tech-pill">
+                    <i className={item.icon}></i>
+                    <span>{item.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
@@ -1489,6 +1870,7 @@ function Contact({ lang }) {
 // ==========================================
 function App() {
   const [lang, setLang] = useState("en");
+  const [introFinished, setIntroFinished] = useState(false);
 
   // Dark / Light Theme State with LocalStorage Persistence
   const [theme, setTheme] = useState(() => {
@@ -1532,8 +1914,39 @@ function App() {
     }
   }, [lang]);
 
+  // Lock scroll during preloader & trigger GSAP on entrance
+  useEffect(() => {
+    if (!introFinished) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray(".glass-card").forEach((card) => {
+          gsap.fromTo(
+            card,
+            { opacity: 0.88, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 92%",
+                toggleActions: "play none none none"
+              }
+            }
+          );
+        });
+      }
+    }
+  }, [introFinished]);
+
   return (
     <div className="portfolio-app">
+      <IntroPreloader onFinish={() => setIntroFinished(true)} />
+      <NeuralBackground theme={theme} />
       <Navbar lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />
       <Hero lang={lang} />
       <MetricsStats lang={lang} />
@@ -1545,6 +1958,7 @@ function App() {
       <Projects lang={lang} />
       <Testimonial lang={lang} />
       <Contact lang={lang} />
+      <MobileBottomNav lang={lang} />
     </div>
   );
 }
