@@ -1,13 +1,5 @@
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
-// Instant Hero Image Memory Pre-decoder (Zero Wait Time)
-if (typeof window !== "undefined") {
-  const isMob = window.innerWidth <= 768;
-  const preImg = new Image();
-  preImg.src = isMob ? "assets/hero/mariam_elgohr_hero.webp" : "assets/hero/mariam_elgohr_hero_seamless.webp";
-  if (preImg.decode) preImg.decode().catch(() => {});
-}
-
 // CV File Path constant matching directory
 const CV_FILE_PATH = "MARIAM%20AHMED%20MUSTAFA%20ELGOHR%20.pdf";
 
@@ -17,42 +9,44 @@ const CV_FILE_PATH = "MARIAM%20AHMED%20MUSTAFA%20ELGOHR%20.pdf";
 const CONTENT = {
   en: {
     nav: {
+      brand: "Code by Mariam",
       home: "Home",
       about: "About",
       education: "Education",
+      projects: "Projects",
       playground: "Simulation",
       toolkit: "Stack",
-      experience: "Experience",
-      projects: "Work",
       contact: "Contact",
-      cta: "Get in touch",
-      cvBtn: "Download CV",
+      cta: "Get in Touch",
+      cvBtn: "Resume",
       langToggle: "العربية",
       langCode: "ar",
       themeDark: "Dark Mode",
-      themeLight: "Editorial Mode"
+      themeLight: "Light Mode"
     },
     hero: {
       location: "Cairo, Egypt",
       greeting: "Hello, I'm",
+      availableStatus: "Available for work",
+      hook: "Architecting Intelligent Algorithms & High-Performance Predictive Systems.",
       name: "Mariam Elgohr",
       headlinePre: "Machine Learning &",
       headlinePost: "Data Science Engineer",
-      statement: "Bridging mathematical intuition and clean engineering logic to turn raw complex data into robust predictive pipelines and intelligent algorithms.",
-      ctaWork: "Selected Work",
+      statement: "Bridging mathematical intuition and algorithmic precision to turn complex datasets into high-accuracy predictive pipelines, intelligent neural systems, and scalable ML solutions.",
+      ctaWork: "Selected Projects",
       ctaContact: "Get in Touch",
       ctaCV: "Download Resume",
-      tag1: "Predictive Modeling",
+      tag1: "Predictive Systems",
       tag2: "DEPI Fellow"
     },
     marquee: [
       "Mariam Ahmed Elgohr",
       "Machine Learning Engineer",
-      "Data Science Student",
-      "DEPI Fellow",
-      "System Analysis & AI",
-      "Statistical Preprocessing",
-      "Predictive Pipelines"
+      "Neural Networks & Deep Learning",
+      "DEPI Data Science Fellow",
+      "Computer Vision & NLP",
+      "Predictive Machine Learning Pipelines",
+      "Statistical Feature Engineering"
     ],
     stats: [
       { number: "15+", label: "Predictive Models Evaluated" },
@@ -62,14 +56,14 @@ const CONTENT = {
     ],
     about: {
       tag: "01 / Background & Narrative",
-      statement: "Turning raw, unstructured data into actionable intelligence through principled statistical foundations and disciplined engineering.",
+      statement: "Turning raw, unstructured data into actionable intelligence through principled statistical foundations and disciplined engineering🤖.",
       p1: "Third-year Computer Science student specializing in System Analysis, Database Engineering, and Artificial Intelligence at the Faculty of Computers and Artificial Intelligence.",
-      p2: "Currently mastering hands-on machine learning systems within the prestigious Digital Egypt Pioneers Initiative (DEPI) Data Science & AI track. My core focus centers on exploratory data analysis, mathematical feature engineering, and deploying supervised predictive models.",
+      p2: "Mastering hands-on machine learning architectures within the Digital Egypt Pioneers Initiative (DEPI) Data Science & AI track. My core expertise covers exploratory data analysis (EDA), predictive algorithm modeling, and training deep neural architectures.",
       caps: [
-        "Statistical Modeling & EDA",
-        "Supervised & Unsupervised ML",
-        "Relational Database Architecture",
-        "Linear Algebra & Probability Rigor"
+        "Statistical Modeling & Advanced EDA",
+        "Supervised & Unsupervised Machine Learning",
+        "Deep Neural Networks & Representation Learning",
+        "Linear Algebra, Probability Rigor & Optimization"
       ]
     },
     education: {
@@ -77,9 +71,10 @@ const CONTENT = {
       degree: "Bachelor of Computer Science (Third-Year Student)",
       faculty: "Faculty of Computers and Artificial Intelligence",
       dept: "System Analysis, Database Engineering & AI",
+      gpa: "3.43 / 4.0",
       period: "2024 – 2028",
-      desc: "Comprehensive coursework in Algorithm Analysis, Advanced Relational Databases, Linear Algebra, Probability Theory, Discrete Mathematics, and Machine Learning Fundamentals.",
-      tags: ["Linear Algebra", "Calculus", "Database Systems", "Data Structures", "Algorithms"]
+      desc: "Rigorous academic curriculum covering Algorithm Design, Advanced Relational Databases, Linear Algebra, Probability & Statistics, Machine Learning Foundations, and Discrete Mathematics.",
+      tags: ["GPA: 3.43 / 4.0", "Linear Algebra", "Calculus & Probability", "Database Systems", "Data Structures", "Algorithms"]
     },
     experience: {
       tag: "03 / Professional Fellowship",
@@ -99,7 +94,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
-          image: "assets/projects/smartstay_preview.webp",
+          image: "assets/projects/smartstay_preview.jpg",
           type: "Regression & Rental Forecasting",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "Regression engine engineered with Python and Scikit-Learn to forecast real-time property rental prices based on geospatial markers, capacity metrics, and seasonal demand swings.",
@@ -111,7 +106,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
-          image: "assets/projects/visionai_preview.webp",
+          image: "assets/projects/visionai_preview.jpg",
           type: "Supervised Computer Vision",
           metric: "Accuracy: 94.8% | Top-1: 5.2%",
           desc: "Supervised classification pipeline for multi-category image categorization, featuring automated image augmentation, feature extraction, confusion matrix visualization, and precision-recall trade-off metrics.",
@@ -123,7 +118,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
-          image: "assets/projects/datapulse_preview.webp",
+          image: "assets/projects/datapulse_preview.jpg",
           type: "Classification & Business Intelligence",
           metric: "AUC-ROC: 0.912 | Recall: 89.4%",
           desc: "In-depth exploratory data analysis and predictive classification model identifying high-risk customer churn patterns with automated feature importance evaluation.",
@@ -167,9 +162,11 @@ const CONTENT = {
       ],
       cat2Title: "Data Science & Machine Learning",
       cat2Items: [
+        { name: "PyTorch", icon: "devicon-pytorch-original colored" },
+        { name: "TensorFlow", icon: "devicon-tensorflow-original colored" },
+        { name: "Scikit-Learn", icon: "fa-solid fa-brain" },
         { name: "Pandas", icon: "devicon-pandas-plain colored" },
         { name: "NumPy", icon: "devicon-numpy-plain colored" },
-        { name: "Scikit-Learn", icon: "fa-solid fa-brain" },
         { name: "Matplotlib", icon: "fa-solid fa-chart-line" },
         { name: "Seaborn", icon: "fa-solid fa-chart-pie" }
       ],
@@ -189,60 +186,72 @@ const CONTENT = {
     },
     contact: {
       tag: "07 / Contact & Collaboration",
-      headline: "Let's build intelligent systems together.",
+      ctaTitle: "Let's Collaborate On Intelligent Data Systems",
       subhead: "Available for Machine Learning internships, data science roles, and technical collaborations.",
-      ctaCircle: "Get in touch",
-      emailLabel: "Direct Email",
+      nameLabel: "Your Name",
+      namePlaceholder: "e.g. Mariam Ahmed...",
+      emailLabel: "Email Address",
+      emailPlaceholder: "name@company.com",
+      messageLabel: "Project or Inquiry Details",
+      messagePlaceholder: "Describe your project scope, timeline, or data challenge...",
+      sendBtn: "Send Message",
+      sendingBtn: "Sending Message...",
+      successTitle: "Message Dispatched Successfully!",
+      successDesc: "Thank you for reaching out. I'll review your inquiry and respond within 24 hours.",
+      emailLabelDirect: "Direct Email",
       phoneLabel: "Phone & WhatsApp",
+      telegramLabel: "Telegram",
       linkedinLabel: "LinkedIn",
       githubLabel: "GitHub",
-      sendMsg: "Send Message",
-      successMsg: "Message sent successfully. I will get back to you shortly."
+      socialHeadline: "Connect Across Platforms"
     },
     footer: {
-      rights: "© 2026 Mariam Ahmed Elgohr • Powered by curiosity and machine learning algorithms 🚀"
+      rights: "Designed & Engineered with 💜 by Mariam Elgohr",
+      copyYear: "© 2026 Mariam Ahmed Elgohr • Powered by curiosity and machine learning algorithms 🚀"
     }
   },
 
-  // Arabic Content (RTL)
+  // Arabic Content (RTL) - Preserving English Name "Mariam Ahmed Elgohr"
   ar: {
     nav: {
+      brand: "Code by Mariam",
       home: "الرئيسية",
       about: "عنّي",
       education: "التعليم",
+      projects: "المشاريع",
       playground: "المحاكاة",
       toolkit: "المهارات",
-      experience: "الخبرة",
-      projects: "المشاريع",
       contact: "تواصل",
       cta: "ابدأ التواصل",
-      cvBtn: "تحميل السيرة الذاتية",
+      cvBtn: "السيرة الذاتية",
       langToggle: "English",
       langCode: "en",
       themeDark: "الوضع الليلي",
-      themeLight: "الوضع الإيديتوريال"
+      themeLight: "الوضع النهاري"
     },
     hero: {
       location: "القاهرة، مصر",
-      greeting: "أهلاً بك، أنا",
-      name: "مريم أحمد الجحر",
+      greeting: "Hello, I'm",
+      availableStatus: "Available for work",
+      hook: "هندسة الخوارزميات الذكية والأنظمة التنبؤية فائقة الأداء.",
+      name: "Mariam Ahmed Elgohr",
       headlinePre: "مهندسة تعلم آلة و",
       headlinePost: "علوم البيانات",
-      statement: "تحويل البيانات الأولية المعقدة إلى خطوط إنتاج تنبؤية وخوارزميات ذكية مدعومة بأسس رياضية راسخة ومنطق هندسي دقيق.",
-      ctaWork: "استعراض المشاريع",
+      statement: "الجمع بين الحدس الرياضي والمنطق الخوارزمي الدقيق لبناء خطوط إنتاج تنبؤية فائقة الدقة، شبكات عصبية ذكية، وحلول تعلم آلة قابلة للتوسع.",
+      ctaWork: "المشاريع الهندسية",
       ctaContact: "تواصل معي",
       ctaCV: "تحميل السيرة الذاتية",
-      tag1: "النمذجة التنبؤية",
+      tag1: "الأنظمة التنبؤية",
       tag2: "متدربة مبادرة DEPI"
     },
     marquee: [
-      "مريم أحمد الجحر",
-      "مهندسة تعلم آلة",
-      "طالبة علوم بيانات",
-      "مبادرة رواد مصر الرقمية",
-      "تحليل النظم والذكاء الاصطناعي",
-      "المعالجة الإحصائية للبيانات",
-      "النمذجة التنبؤية"
+      "Mariam Elgohr",
+      "Machine Learning Engineer",
+      "الشبكات العصبية والتعلم العميق",
+      "مبادرة رواد مصر الرقمية (DEPI)",
+      "رؤية الكمبيوتر ومعالجة اللغات (NLP)",
+      "المعالجة الإحصائية وهندسة الميزات",
+      "النمذجة التنبؤية المتطورة"
     ],
     stats: [
       { number: "+15", label: "نموذج تنبؤي مدرّب ومقيّم" },
@@ -252,14 +261,14 @@ const CONTENT = {
     ],
     about: {
       tag: "01 / الرؤية والمسار",
-      statement: "بناء أنظمة ذكية تحوّل ركام البيانات إلى قرارات دقيقة عبر الصرامة الإحصائية والهندسة البرمجية النظيفة.",
+      statement: "تحويل البيانات الأولية المعقدة إلى قرارات ذكية وحلول استباقية تستند إلى أسس إحصائية متينة وهندسة برمجية نظيفة.",
       p1: "طالبة بالسنة الثالثة في كلية الحاسبات والذكاء الاصطناعي، متخصصة في قسم تحليل النظم وهندسة قواعد البيانات والذكاء الاصطناعي.",
-      p2: "أعمل على صقل مهاراتي العملية عبر مسار علوم البيانات والذكاء الاصطناعي بمبادرة رواد مصر الرقمية (DEPI). ينصب تركيزي على التحليل الاستكشافي للبيانات، وهندسة الميزات الرياضية، ونشر نماذج التعلم الخاضع للإشراف.",
+      p2: "أعمل على صقل مهاراتي العملية عبر مسار علوم البيانات والذكاء الاصطناعي بمبادرة رواد مصر الرقمية (DEPI). ينصب تركيزي على التحليل الاستكشافي للبيانات (EDA)، النمذجة التنبؤية، وبناء الشبكات العصبية وتدريبها.",
       caps: [
-        "المعالجة الإحصائية والاستكشافية (EDA)",
-        "نماذج التعلم الخاضع وغير الخاضع لإشراف",
-        "تصميم وهندسة قواعد البيانات (SQL)",
-        "الصرامة الرياضية والخوارزمية"
+        "المعالجة الإحصائية والاستكشافية المتقدمة (EDA)",
+        "خوارزميات التعلم الخاضع وغير الخاضع لإشراف",
+        "الشبكات العصبية والتعلم العميق (Deep Learning)",
+        "الصرامة الرياضية، الجبر الخطي، وتطبيقات التحسين"
       ]
     },
     education: {
@@ -267,9 +276,10 @@ const CONTENT = {
       degree: "بكالوريوس علوم الحاسب (طالبة بالفرقة الثالثة)",
       faculty: "كلية الحاسبات والذكاء الاصطناعي",
       dept: "تحليل النظم، هندسة قواعد البيانات، والذكاء الاصطناعي",
+      gpa: "3.43 / 4.0",
       period: "2024 – 2028",
-      desc: "منهج أكاديمي شامل يركز على هياكل البيانات، تحليل الخوارزميات، بنية قواعد البيانات المتقدمة، مبادئ تعلم الآلة، الجبر الخطي، والتفاضل والتكامل وحساب الاحتمالات.",
-      tags: ["الجبر الخطي", "التفاضل والاحتمالات", "بنية قواعد البيانات", "تحليل النظم", "هياكل البيانات"]
+      desc: "منهج أكاديمي متين يركز على هياكل البيانات، تحليل الخوارزميات، بنية قواعد البيانات المتقدمة، مبادئ تعلم الآلة، الجبر الخطي، والتفاضل والتكامل وحساب الاحتمالات.",
+      tags: ["المعدل التراكمي GPA: 3.43 / 4.0", "الجبر الخطي", "التفاضل والاحتمالات", "بنية قواعد البيانات", "تحليل النظم", "هياكل البيانات"]
     },
     experience: {
       tag: "03 / التدريب والزمالة المهنية",
@@ -289,7 +299,7 @@ const CONTENT = {
           id: "p1",
           num: "01",
           title: "SmartStay Price Predictor",
-          image: "assets/projects/smartstay_preview.webp",
+          image: "assets/projects/smartstay_preview.jpg",
           type: "نموذج انحدار وتنبؤ بأسعار الإيجار",
           metric: "R²: 0.934 | RMSE: $14.20",
           desc: "نموذج انحدار مبني باستخدام Python وScikit-Learn للتنبؤ بالأسعار الحقيقية لتأجير العقارات بناءً على الموقع الجغرافي وخصائص الغرف والخدمات ومواسم الطلب.",
@@ -301,7 +311,7 @@ const CONTENT = {
           id: "p2",
           num: "02",
           title: "VisionAI Image Classifier",
-          image: "assets/projects/visionai_preview.webp",
+          image: "assets/projects/visionai_preview.jpg",
           type: "تصنيف الصور بالتعلم الخاضع للإشراف",
           metric: "الدقة: 94.8% | خطأ أعلى-1: 5.2%",
           desc: "خط معالجة ذكي لتصنيف مجموعات الصور متعددة الفئات، يشمل تكثيف البيانات بصرياً، استخراج الميزات، ومصفوفة الارتباك لتقييم الدقة والاستدعاء.",
@@ -313,7 +323,7 @@ const CONTENT = {
           id: "p3",
           num: "03",
           title: "DataPulse Churn Analytics",
-          image: "assets/projects/datapulse_preview.webp",
+          image: "assets/projects/datapulse_preview.jpg",
           type: "تحليل استكشافي وتنبؤ باحتفاظ العملاء",
           metric: "AUC-ROC: 0.912 | استدعاء: 89.4%",
           desc: "دراسة استكشافية متعمقة (EDA) ونموذج تصنيف للتنبؤ باحتمالية تسرب العملاء والاحتفاظ بهم، مع استخراج العوامل المؤثرة لتزويد صناع القرار بتوصيات فورية.",
@@ -357,9 +367,11 @@ const CONTENT = {
       ],
       cat2Title: "مكتبات علوم البيانات وتعلم الآلة",
       cat2Items: [
+        { name: "PyTorch", icon: "devicon-pytorch-original colored" },
+        { name: "TensorFlow", icon: "devicon-tensorflow-original colored" },
+        { name: "Scikit-Learn", icon: "fa-solid fa-brain" },
         { name: "Pandas", icon: "devicon-pandas-plain colored" },
         { name: "NumPy", icon: "devicon-numpy-plain colored" },
-        { name: "Scikit-Learn", icon: "fa-solid fa-brain" },
         { name: "Matplotlib", icon: "fa-solid fa-chart-line" },
         { name: "Seaborn", icon: "fa-solid fa-chart-pie" }
       ],
@@ -379,18 +391,28 @@ const CONTENT = {
     },
     contact: {
       tag: "07 / التواصل والتعاون",
-      headline: "فلنصنع أنظمة ذكية رائدة معاً.",
-      subhead: "متاحة لفرص العمل والتدريب في تعلم الآلة، علوم البيانات، والمشاريع البرمجية المبتكرة.",
-      ctaCircle: "تواصل معي",
+      ctaTitle: "لنتعاون معاً في تطوير أنظمة بيانات ذكية",
+      subhead: "متاحة لفرص العمل والتدريب في تعلم الآلة، علوم البيانات، والمشاريع الهندسية المبتكرة.",
+      nameLabel: "الاسم ",
+      namePlaceholder: "مثال: مريم أو محمد...",
       emailLabel: "البريد الإلكتروني",
+      emailPlaceholder: "name@company.com",
+      messageLabel: "تفاصيل المشروع أو الاستفسار",
+      messagePlaceholder: "اكتب رسالتك، أهداف المشروع، أو التحديات البيانية هنا...",
+      sendBtn: "إرسال الرسالة الآن",
+      sendingBtn: "جارٍ الإرسال...",
+      successTitle: "تم إرسال رسالتك بنجاح!",
+      successDesc: "شكراً لتواصلك. سأراجع رسالتك وأرد عليك خلال 24 ساعة بإذن الله.",
+      emailLabelDirect: "البريد المباشر",
       phoneLabel: "الهاتف والواتساب",
+      telegramLabel: "تيليجرام",
       linkedinLabel: "لينكد إن",
       githubLabel: "جيت هَب",
-      sendMsg: "إرسال الرسالة",
-      successMsg: "تم إرسال رسالتك بنجاح، وسأتواصل معك في أقرب وقت."
+      socialHeadline: "التواصل عبر المنصات"
     },
     footer: {
-      rights: "© 2026 مريم أحمد الجحر • مدعومة بالشغف وفضول خوارزميات التعلم الآلي 🚀"
+      rights: "Designed & Engineered with 💜 by Mariam Elgohr",
+      copyYear: "© 2026 Mariam Ahmed Elgohr • Powered by curiosity and machine learning algorithms 🚀"
     }
   }
 };
@@ -416,12 +438,6 @@ function DennisPreloader({ onFinish }) {
   const preloaderRef = useRef(null);
 
   useEffect(() => {
-    // Pre-decode hero image so it is 100% loaded in GPU memory before preloader curtain lifts
-    const isMob = typeof window !== "undefined" && window.innerWidth <= 768;
-    const heroImg = new Image();
-    heroImg.src = isMob ? "assets/hero/mariam_elgohr_hero.webp" : "assets/hero/mariam_elgohr_hero_seamless.webp";
-    if (heroImg.decode) heroImg.decode().catch(() => {});
-
     let step = 0;
     const interval = setInterval(() => {
       step++;
@@ -637,25 +653,22 @@ function Magnetic({ children, factor = 0.35, textFactor = 0.45, rotateFactor = 0
   return React.cloneElement(React.Children.only(children), { ref: itemRef });
 }
 
-// ==========================================================================
-// 3. EDITORIAL HEADER & FLOATING CIRCULAR MENU (Dennis Snellenberg Style)
-// ==========================================================================
 function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const t = CONTENT[lang].nav;
 
-  // Track scroll to toggle Dennis Snellenberg dual-state header
+  // Track scroll state for sleek backdrop elevation
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 150);
+      setScrolled(window.scrollY > 40);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when curved drawer is open
+  // Lock body scroll when drawer is open on mobile
   useEffect(() => {
     if (drawerOpen) {
       document.body.style.overflow = "hidden";
@@ -677,13 +690,12 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
   }, []);
 
   const navLinks = [
-    { href: "#hero", index: "01", label: t.home },
-    { href: "#about", index: "02", label: t.about },
-    { href: "#projects", index: "03", label: t.projects },
-    { href: "#playground", index: "04", label: t.playground },
-    { href: "#toolkit", index: "05", label: t.toolkit },
-    { href: "#experience", index: "06", label: t.experience },
-    { href: "#contact", index: "07", label: t.contact }
+    { href: "#about", label: t.about, icon: "fa-regular fa-user" },
+    { href: "#education", label: t.education, icon: "fa-solid fa-graduation-cap" },
+    { href: "#projects", label: t.projects, icon: "fa-solid fa-folder-open" },
+    { href: "#playground", label: t.playground, icon: "fa-solid fa-sliders" },
+    { href: "#toolkit", label: t.toolkit, icon: "fa-solid fa-layer-group" },
+    { href: "#contact", label: t.contact, icon: "fa-regular fa-envelope" }
   ];
 
   const handleNavClick = (e, href) => {
@@ -696,101 +708,161 @@ function EditorialHeader({ lang, setLang, theme, toggleTheme }) {
 
     if (window.lenis) {
       window.lenis.scrollTo(targetEl, {
-        duration: 1.4,
+        duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        offset: 0
+        offset: -80
       });
     } else {
       targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
+  const handleLangToggle = () => {
+    const next = lang === "ar" ? "en" : "ar";
+    setLang(next);
+  };
+
   return (
     <>
-      <header className={`snellenberg-header ${scrolled ? "header-hidden" : ""}`}>
+      <header className={`snellenberg-header fixed-top-bar ${scrolled ? "scrolled-nav" : ""}`}>
         <div className="container header-content">
+          {/* Brand Logo on Left */}
           <a
             href="#hero"
             className="brand-monogram"
             onClick={(e) => handleNavClick(e, "#hero")}
           >
-            <span className="brand-dot"></span>
-            <span>© Code by Mariam</span>
+            <span className="brand-code-symbol">&lt;/&gt;</span>
+            <span className="brand-title">Code by Mariam</span>
           </a>
 
-          <div className="header-nav-group">
+          {/* Desktop Horizontal Navigation Links */}
+          <nav className="desktop-nav-menu" aria-label="Main Navigation">
             <ul className="header-links">
-              <li className="header-link-item">
-                <a href="#projects" onClick={(e) => handleNavClick(e, "#projects")}>{t.projects}</a>
-              </li>
-              <li className="header-link-item">
-                <a href="#about" onClick={(e) => handleNavClick(e, "#about")}>{t.about}</a>
-              </li>
-              <li className="header-link-item">
-                <a href="#contact" onClick={(e) => handleNavClick(e, "#contact")}>{t.contact}</a>
-              </li>
+              {navLinks.map((item) => (
+                <li key={item.href} className="header-link-item">
+                  <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
+                    <span>{item.label}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
+          </nav>
+
+          {/* Header Action Controls: Language Toggle & Theme Toggle */}
+          <div className="header-actions">
+            {/* Language Switcher (Ar / En) */}
+            <button
+              className="action-pill-btn lang-pill-btn"
+              onClick={handleLangToggle}
+              title={lang === "ar" ? "Switch to English" : "التبديل إلى العربية"}
+              aria-label="Toggle Language"
+            >
+              <i className="fa-solid fa-language"></i>
+              <span className="lang-code-text">{lang === "ar" ? "EN" : "عربي"}</span>
+            </button>
+
+            {/* Dark / Light Mode Switcher */}
+            <button
+              className="action-pill-btn theme-pill-btn"
+              onClick={toggleTheme}
+              title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+              aria-label="Toggle Theme"
+            >
+              <i className={`fa-solid ${theme === "light" ? "fa-moon" : "fa-sun"}`}></i>
+              <span className="theme-name-text">{theme === "light" ? (lang === "ar" ? "داكن" : "Dark") : (lang === "ar" ? "نهاري" : "Light")}</span>
+            </button>
+
+            {/* Download CV Quick Action */}
+            <a
+              href={CV_FILE_PATH}
+              download="Mariam_Ahmed_Elgohr_CV.pdf"
+              className="action-pill-btn cv-quick-btn"
+              title="Download CV"
+            >
+              <i className="fa-solid fa-file-arrow-down"></i>
+              <span>{t.cvBtn}</span>
+            </a>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              className={`mobile-burger-trigger ${drawerOpen ? "active" : ""}`}
+              onClick={() => setDrawerOpen(!drawerOpen)}
+              aria-label="Open Navigation Menu"
+            >
+              <span className="bar bar-1"></span>
+              <span className="bar bar-2"></span>
+              <span className="bar bar-3"></span>
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Floating Circular Burger Button */}
-      <Magnetic factor={0.35} textFactor={0.4}>
-        <button
-          className={`floating-menu-btn ${drawerOpen ? "active" : ""} ${scrolled || drawerOpen ? "btn-visible" : ""}`}
-          onClick={() => setDrawerOpen(!drawerOpen)}
-          aria-label="Toggle Menu"
-        >
-          <div className="burger-lines">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-      </Magnetic>
-
-      {/* Backdrop */}
+      {/* Backdrop for mobile drawer */}
       <div
         className={`drawer-backdrop ${drawerOpen ? "open" : ""}`}
         onClick={() => setDrawerOpen(false)}
       ></div>
 
-      {/* Curved Navigation Drawer */}
-      <aside className={`curved-nav-drawer ${drawerOpen ? "open" : ""}`} aria-label="Navigation Menu">
-        <div>
-          <div className="drawer-nav-label">Navigation</div>
-          <ul className="drawer-links">
-            {navLinks.map((item) => (
-              <li key={item.index} className="drawer-link-item">
-                <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
-                  <span className="drawer-link-index">{item.index}</span>
-                  <span>{item.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+      {/* Curved Navigation Drawer for Mobile */}
+      <aside className={`curved-nav-drawer ${drawerOpen ? "open" : ""}`} aria-label="Mobile Navigation">
+        <div className="drawer-top-info">
+          <div className="drawer-nav-label">{lang === "ar" ? "القائمة الرئيسية" : "Navigation"}</div>
+          <button
+            className="drawer-close-btn"
+            onClick={() => setDrawerOpen(false)}
+            aria-label="Close Menu"
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
         </div>
 
-        <div className="drawer-footer">
-          <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <a
-                href={CV_FILE_PATH}
-                download="Mariam_Ahmed_Elgohr_CV.pdf"
-                className="action-pill-btn"
-                style={{ background: "#455ce9", color: "#fff", borderColor: "#455ce9" }}
-              >
-                <i className="fa-solid fa-file-arrow-down"></i>
-                <span>{t.cvBtn}</span>
+        <ul className="drawer-links">
+          {navLinks.map((item, idx) => (
+            <li key={item.href} className="drawer-link-item">
+              <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
+                <span className="drawer-link-index">0{idx + 1}</span>
+                <i className={item.icon} style={{ fontSize: "1.2rem", opacity: 0.6, margin: "0 0.5rem" }}></i>
+                <span>{item.label}</span>
               </a>
-            </Magnetic>
+            </li>
+          ))}
+        </ul>
+
+        <div className="drawer-footer">
+          <div className="drawer-action-controls">
+            <button className="action-pill-btn" onClick={handleLangToggle}>
+              <i className="fa-solid fa-language"></i>
+              <span>{lang === "ar" ? "English" : "العربية"}</span>
+            </button>
+            <button className="action-pill-btn" onClick={toggleTheme}>
+              <i className={`fa-solid ${theme === "light" ? "fa-moon" : "fa-sun"}`}></i>
+              <span>{theme === "light" ? (lang === "ar" ? "الوضع الداكن" : "Dark Mode") : (lang === "ar" ? "الوضع النهاري" : "Light Mode")}</span>
+            </button>
+          </div>
+
+          <div style={{ marginTop: "1rem" }}>
+            <a
+              href={CV_FILE_PATH}
+              download="Mariam_Ahmed_Elgohr_CV.pdf"
+              className="action-pill-btn"
+              style={{ background: "#455ce9", color: "#fff", borderColor: "#455ce9", width: "100%", justifyContent: "center" }}
+            >
+              <i className="fa-solid fa-file-arrow-down"></i>
+              <span>{t.cvBtn}</span>
+            </a>
           </div>
 
           <div className="drawer-socials">
-            <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer">WhatsApp</a>
-            <a href="mailto:mariamahmedelgohr@gmail.com">Email</a>
+            <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer">
+              <i className="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer">
+              <i className="fa-brands fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer">
+              <i className="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
           </div>
         </div>
       </aside>
@@ -895,43 +967,33 @@ function Hero({ lang }) {
         } : undefined}
       >
         {isMobile ? (
-          <picture className="personal-image-picture" style={{ width: "100%", height: "100%", display: "block" }}>
-            <source srcSet="assets/hero/mariam_elgohr_hero.webp" type="image/webp" />
-            <img
-              src="assets/hero/mariam_elgohr_hero.webp"
-              alt="Mariam Ahmed Elgohr"
-              className="personal-image-img"
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 18%",
-                display: "block"
-              }}
-            />
-          </picture>
+          <img
+            src="assets/hero/mariam_elgohr_hero.jpg"
+            alt="Mariam Ahmed Elgohr"
+            className="personal-image-img"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 18%",
+              display: "block"
+            }}
+          />
         ) : (
           <picture className="personal-image-picture">
-            <source srcSet="assets/hero/mariam_elgohr_hero_seamless.webp" type="image/webp" />
             <img
-              src="assets/hero/mariam_elgohr_hero_seamless.webp"
+              src="assets/hero/mariam_elgohr_hero_seamless.png"
               alt="Mariam Ahmed Elgohr"
               className="personal-image-img"
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
             />
           </picture>
         )}
       </div>
 
-      {/* Left Capsule Pill (Dennis Snellenberg Screenshot 1) */}
+      {/* Dennis Snellenberg Signature Left Capsule Pill */}
       <div className="hero-located-pill">
         <div className="located-text">
           <span>{lang === "ar" ? "الموقع" : "Located"}</span>
@@ -942,7 +1004,13 @@ function Hero({ lang }) {
         </div>
       </div>
 
-      {/* Right Role Block with Arrow (Dennis Snellenberg Screenshot 1) */}
+      {/* Far-Left Available for Work Pill */}
+      <div className="hero-status-pill far-left-pill">
+        <span className="live-pulse-green"></span>
+        <span className="status-text">{t.availableStatus}</span>
+      </div>
+
+      {/* Right Role Block with Arrow */}
       <div className="hero-role-block">
         <span className="hero-role-arrow">
           <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-left" : "fa-arrow-down-right"}`}></i>
@@ -962,7 +1030,7 @@ function Hero({ lang }) {
         </h3>
       </div>
 
-      {/* Dennis Snellenberg Signature Giant Name Ticker (Screenshot 1) */}
+      {/* Dennis Snellenberg Signature Giant Name Ticker with Hook Below */}
       <div className="big-name" ref={nameRef} aria-hidden="true">
         <div className="name-h1">
           <div className="name-wrap">
@@ -970,6 +1038,14 @@ function Hero({ lang }) {
             <h1>{tickerName} <span className="spacer">—</span></h1>
             <h1>{tickerName} <span className="spacer">—</span></h1>
             <h1>{tickerName} <span className="spacer">—</span></h1>
+          </div>
+        </div>
+
+        {/* Hook Banner Directly Under Name */}
+        <div className="hero-hook-banner-container">
+          <div className="hero-hook-banner">
+            <span className="hero-hook-sparkle">✨</span>
+            <span className="hero-hook-text">{t.hook}</span>
           </div>
         </div>
       </div>
@@ -1093,14 +1169,14 @@ function About({ lang }) {
 }
 
 // ==========================================================================
-// 8. TIMELINE (Education & DEPI Experience)
+// 8. TIMELINE (Education with Graduation Cap & DEPI Experience)
 // ==========================================================================
 function JourneyTimeline({ lang }) {
   const edu = CONTENT[lang].education;
   const exp = CONTENT[lang].experience;
 
   return (
-    <section id="experience" className="section-editorial">
+    <section id="education" className="section-editorial">
       <div className="container">
         <div className="editorial-section-tag">
           <span className="editorial-tag-dot"></span>
@@ -1108,8 +1184,40 @@ function JourneyTimeline({ lang }) {
         </div>
 
         <div className="timeline-editorial-list">
+          {/* Academic Degree with Graduation Cap */}
+          <div className="timeline-row-item timeline-education-item">
+            <div className="timeline-period-badge">
+              <i className="fa-solid fa-graduation-cap" style={{ margin: "0 0.4rem", color: "var(--accent-blue)" }}></i>
+              <span>{edu.period}</span>
+            </div>
+            <div>
+              <h3 className="timeline-main-title" style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                <span>{edu.degree}</span>
+                <span className="edu-cap-badge" title="Academic Specialization">
+                  <i className="fa-solid fa-graduation-cap"></i>
+                </span>
+              </h3>
+              <div className="timeline-org-name">{edu.faculty} • {edu.dept}</div>
+              <div className="education-gpa-highlight">
+                <span className="gpa-pill-badge">
+                  <i className="fa-solid fa-award"></i>
+                  <strong>GPA: {edu.gpa}</strong>
+                </span>
+              </div>
+              <p className="timeline-desc-text">{edu.desc}</p>
+              <div className="timeline-tag-pills">
+                {edu.tags.map((tg, i) => (
+                  <span key={i} className="timeline-tag-pill">{tg}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="editorial-tag-dot" style={{ background: "var(--accent-blue)" }}></span>
+            </div>
+          </div>
+
           {/* DEPI Fellowship */}
-          <div className="timeline-row-item">
+          <div id="experience" className="timeline-row-item">
             <span className="timeline-period-badge">{exp.period}</span>
             <div>
               <h3 className="timeline-main-title">{exp.role}</h3>
@@ -1123,24 +1231,6 @@ function JourneyTimeline({ lang }) {
             </div>
             <div>
               <span className="editorial-tag-dot" style={{ background: "#10b981" }}></span>
-            </div>
-          </div>
-
-          {/* Academic Degree */}
-          <div id="education" className="timeline-row-item">
-            <span className="timeline-period-badge">{edu.period}</span>
-            <div>
-              <h3 className="timeline-main-title">{edu.degree}</h3>
-              <div className="timeline-org-name">{edu.faculty} • {edu.dept}</div>
-              <p className="timeline-desc-text">{edu.desc}</p>
-              <div className="timeline-tag-pills">
-                {edu.tags.map((tg, i) => (
-                  <span key={i} className="timeline-tag-pill">{tg}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <span className="editorial-tag-dot"></span>
             </div>
           </div>
         </div>
@@ -1672,7 +1762,7 @@ function Toolkit({ lang }) {
 }
 
 // ==========================================================================
-// 12. SNELLENBERG CONTACT CTA & SPIRITUAL FOOTER
+// 12. SNELLENBERG CONTACT CTA, CONTACT FORM & SPIRITUAL ILLUMINATION
 // ==========================================================================
 function Contact({ lang }) {
   const t = CONTENT[lang].contact;
@@ -1682,6 +1772,7 @@ function Contact({ lang }) {
   const footerCurveRef = useRef(null);
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -1706,16 +1797,27 @@ function Contact({ lang }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
-    setSubmitted(true);
+    setIsSubmitting(true);
     setTimeout(() => {
-      setSubmitted(false);
+      setIsSubmitting(false);
+      setSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
-    }, 4000);
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 70,
+          spread: 70,
+          origin: { y: 0.75 }
+        });
+      }
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 6000);
+    }, 850);
   };
 
   return (
     <>
-      {/* Above-footer More Work Button (Dennis Snellenberg Screenshot 3) */}
+      {/* Above-footer More Work Button (Dennis Snellenberg Signature) */}
       <div className="footer-more-work-container">
         <a
           href="#projects"
@@ -1743,99 +1845,233 @@ function Contact({ lang }) {
         </div>
 
         <div className="container">
-          {/* Editorial Headline with Avatar, Two-Line Title & Arrow (Dennis Snellenberg Screenshot 3) */}
+          {/* Editorial Headline with New Portrait Photo 1.jpg and New CTA Title */}
           <div className="contact-editorial-header">
             <div className="contact-title-group">
-              <div className="contact-title-line contact-title-line-1">
+              <div className="contact-title-line">
                 <span className="contact-avatar-wrap">
                   <img
-                    src="assets/hero/mariam_elgohr_hero.webp"
+                    src="assets/hero/1.jpg"
                     alt="Mariam Ahmed Elgohr"
                     className="contact-avatar-img"
-                    loading="lazy"
-                    decoding="async"
                   />
                 </span>
-                <h2 className="contact-title-text">{lang === "ar" ? "لنعمل" : "Let's work"}</h2>
+                <h2 className="contact-title-text">{t.ctaTitle}</h2>
               </div>
-              <div className="contact-title-line contact-title-line-2">
-                <h2 className="contact-title-text">{lang === "ar" ? "معاً" : "together"}</h2>
-              </div>
+              <p className="contact-subhead-text">{t.subhead}</p>
             </div>
 
             <div className="contact-arrow-indicator">
-              <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-right" : "fa-arrow-down-left"}`}></i>
+              <i className={`fa-solid ${lang === "ar" ? "fa-arrow-down-left" : "fa-arrow-down-right"}`}></i>
             </div>
           </div>
 
-          {/* Action Zone with Hairline and Floating Circle (Screenshot 3) */}
-          <div className="contact-action-zone">
-            <div className="contact-hairline-separator"></div>
-            <div className="contact-circle-anchor">
-              <Magnetic factor={0.45} textFactor={0.4} rotateFactor={0.06}>
+          {/* Contact Layout: Interactive Form on One Side, Direct Platform Links on the Other */}
+          <div className="contact-interactive-layout">
+            {/* Direct Contact Form */}
+            <div className="contact-form-wrapper">
+              {submitted ? (
+                <div className="contact-success-banner">
+                  <div className="success-icon-wrap">
+                    <i className="fa-solid fa-circle-check"></i>
+                  </div>
+                  <h3 className="success-headline">{t.successTitle}</h3>
+                  <p className="success-message">{t.successDesc}</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="modern-contact-form">
+                  <div className="form-group-field">
+                    <label htmlFor="contact-name" className="form-field-label">
+                      <i className="fa-regular fa-user"></i>
+                      <span>{t.nameLabel}</span>
+                    </label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      required
+                      placeholder={t.namePlaceholder}
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="form-editorial-input"
+                    />
+                  </div>
+
+                  <div className="form-group-field">
+                    <label htmlFor="contact-email" className="form-field-label">
+                      <i className="fa-regular fa-envelope"></i>
+                      <span>{t.emailLabel}</span>
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      required
+                      placeholder={t.emailPlaceholder}
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="form-editorial-input"
+                    />
+                  </div>
+
+                  <div className="form-group-field">
+                    <label htmlFor="contact-msg" className="form-field-label">
+                      <i className="fa-regular fa-message"></i>
+                      <span>{t.messageLabel}</span>
+                    </label>
+                    <textarea
+                      id="contact-msg"
+                      rows="4"
+                      required
+                      placeholder={t.messagePlaceholder}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="form-editorial-input form-textarea"
+                    ></textarea>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn-magnetic btn-submit-message"
+                  >
+                    <i className={`fa-solid ${isSubmitting ? "fa-spinner fa-spin" : "fa-paper-plane"}`}></i>
+                    <span>{isSubmitting ? t.sendingBtn : t.sendBtn}</span>
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Social & Direct Channels Column */}
+            <div className="contact-channels-column">
+              <h3 className="channels-section-heading">
+                <i className="fa-solid fa-link" style={{ color: "var(--accent-blue)", margin: "0 0.4rem" }}></i>
+                <span>{t.socialHeadline}</span>
+              </h3>
+
+              <div className="contact-cards-cluster">
+                {/* LinkedIn Card */}
+                <a
+                  href="https://www.linkedin.com/in/mariam-elgohr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-channel-card"
+                >
+                  <div className="channel-icon-wrap linkedin-brand">
+                    <i className="fa-brands fa-linkedin-in"></i>
+                  </div>
+                  <div className="channel-card-info">
+                    <span className="channel-sub-name">{t.linkedinLabel}</span>
+                    <span className="channel-main-link">linkedin.com/in/mariam-elgohr</span>
+                  </div>
+                  <i className="fa-solid fa-arrow-up-right-from-square channel-card-arrow"></i>
+                </a>
+
+                {/* GitHub Card */}
+                <a
+                  href="https://github.com/mariamelgohrr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-channel-card"
+                >
+                  <div className="channel-icon-wrap github-brand">
+                    <i className="fa-brands fa-github"></i>
+                  </div>
+                  <div className="channel-card-info">
+                    <span className="channel-sub-name">{t.githubLabel}</span>
+                    <span className="channel-main-link">github.com/mariamelgohrr</span>
+                  </div>
+                  <i className="fa-solid fa-arrow-up-right-from-square channel-card-arrow"></i>
+                </a>
+
+                {/* Direct Email Card */}
                 <a
                   href="mailto:mariamahmedelgohr@gmail.com"
-                  className="btn-giant-circle"
-                  title="Send Email"
+                  className="contact-channel-card"
                 >
-                  <span>{t.ctaCircle}</span>
+                  <div className="channel-icon-wrap email-brand">
+                    <i className="fa-solid fa-envelope"></i>
+                  </div>
+                  <div className="channel-card-info">
+                    <span className="channel-sub-name">{t.emailLabelDirect}</span>
+                    <span className="channel-main-link">mariamahmedelgohr@gmail.com</span>
+                  </div>
+                  <i className="fa-solid fa-arrow-up-right-from-square channel-card-arrow"></i>
                 </a>
-              </Magnetic>
+
+                {/* WhatsApp Card */}
+                <a
+                  href="https://wa.me/201285694985"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-channel-card"
+                >
+                  <div className="channel-icon-wrap whatsapp-brand">
+                    <i className="fa-brands fa-whatsapp"></i>
+                  </div>
+                  <div className="channel-card-info">
+                    <span className="channel-sub-name">{t.phoneLabel}</span>
+                    <span className="channel-main-link" dir="ltr">+20 128 569 4985</span>
+                  </div>
+                  <i className="fa-solid fa-arrow-up-right-from-square channel-card-arrow"></i>
+                </a>
+
+                {/* Telegram Card */}
+                <a
+                  href="https://t.me/+201285694985"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-channel-card"
+                >
+                  <div className="channel-icon-wrap telegram-brand">
+                    <i className="fa-brands fa-telegram"></i>
+                  </div>
+                  <div className="channel-card-info">
+                    <span className="channel-sub-name">{t.telegramLabel}</span>
+                    <span className="channel-main-link" dir="ltr">+20 128 569 4985</span>
+                  </div>
+                  <i className="fa-solid fa-arrow-up-right-from-square channel-card-arrow"></i>
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Contact Pills Row (Screenshot 3) */}
-          <div className="contact-pills-row">
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <a href="mailto:mariamahmedelgohr@gmail.com" className="contact-pill-link">
-                mariamahmedelgohr@gmail.com
-              </a>
-            </Magnetic>
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer" className="contact-pill-link">
-                +20 128 569 4985
-              </a>
-            </Magnetic>
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer" className="contact-pill-link">
-                LinkedIn ↗
-              </a>
-            </Magnetic>
-            <Magnetic factor={0.25} textFactor={0.3}>
-              <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer" className="contact-pill-link">
-                GitHub ↗
-              </a>
-            </Magnetic>
+          {/* Illuminated Decorative Quranic Verse Frame */}
+          <div className="spiritual-illuminated-container" dir="rtl">
+            <div className="spiritual-frame-outer">
+              <div className="spiritual-corner-ornament top-right"></div>
+              <div className="spiritual-corner-ornament top-left"></div>
+              <div className="spiritual-corner-ornament bottom-right"></div>
+              <div className="spiritual-corner-ornament bottom-left"></div>
+
+              <div className="spiritual-inner-content">
+                <div className="spiritual-bismillah-ornament">
+                  <i className="fa-solid fa-certificate"></i>
+                </div>
+                <div className="spiritual-arabic-verse">{s.verse}</div>
+                <div className="spiritual-surah-tag">{s.surah}</div>
+              </div>
+            </div>
           </div>
 
-        {/* Dignified Quranic Verse */}
-        <div className="spiritual-editorial-card" dir="rtl">
-          <div className="spiritual-arabic-verse">{s.verse}</div>
-          <div className="spiritual-surah-tag">{s.surah}</div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="editorial-footer-bar">
-          <div className="footer-rights">{f.rights}</div>
-          <div className="footer-local-time">
-            <span className="live-pulse-dot"></span>
-            <span>Cairo, Egypt</span>
-            <CairoClock />
-          </div>
-          <div className="footer-social-links">
-            <Magnetic factor={0.2} textFactor={0.25}>
+          {/* Bottom Footer Bar */}
+          <div className="editorial-footer-bar">
+            <div className="footer-credits-group">
+              <div className="footer-rights">{f.rights}</div>
+              <div className="footer-copy-statement">{f.copyYear}</div>
+            </div>
+            <div className="footer-local-time">
+              <span className="live-pulse-dot"></span>
+              <span>Cairo, Egypt</span>
+              <CairoClock />
+            </div>
+            <div className="footer-social-links">
               <a href="https://www.linkedin.com/in/mariam-elgohr" target="_blank" rel="noreferrer" className="footer-social-item">LinkedIn</a>
-            </Magnetic>
-            <Magnetic factor={0.2} textFactor={0.25}>
               <a href="https://github.com/mariamelgohrr" target="_blank" rel="noreferrer" className="footer-social-item">GitHub</a>
-            </Magnetic>
-            <Magnetic factor={0.2} textFactor={0.25}>
               <a href="https://wa.me/201285694985" target="_blank" rel="noreferrer" className="footer-social-item">WhatsApp</a>
-            </Magnetic>
+              <a href="https://t.me/+201285694985" target="_blank" rel="noreferrer" className="footer-social-item">Telegram</a>
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
     </>
   );
 }
@@ -1847,10 +2083,21 @@ function App() {
   const [lang, setLang] = useState("en");
   const [introFinished, setIntroFinished] = useState(false);
 
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem("portfolio_theme");
+      return saved === "light" ? "light" : "dark";
+    } catch (e) {
+      return "dark";
+    }
+  });
 
   const toggleTheme = () => {
-    setTheme("light");
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem("portfolio_theme", next);
+    } catch (e) {}
   };
 
   // Lenis Smooth Scroll initialization
@@ -1911,14 +2158,16 @@ function App() {
     }
   }, []);
 
-  // Theme synchronization: Exclusively White / Light Editorial Theme
+  // Theme synchronization
   useEffect(() => {
-    document.body.classList.add("light-theme");
-    document.documentElement.classList.add("light-theme-active");
-    try {
-      localStorage.setItem("portfolio_theme", "light");
-    } catch (e) {}
-  }, []);
+    if (theme === "light") {
+      document.body.classList.add("light-theme");
+      document.documentElement.classList.add("light-theme-active");
+    } else {
+      document.body.classList.remove("light-theme");
+      document.documentElement.classList.remove("light-theme-active");
+    }
+  }, [theme]);
 
   // Language synchronization
   useEffect(() => {
