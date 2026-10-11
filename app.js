@@ -968,7 +968,7 @@ function Hero({ lang }) {
       >
         {isMobile ? (
           <img
-            src="assets/hero/mariam_elgohr_hero.jpg"
+            src="assets/hero/photo_2026-10-11_22-28-38.jpg"
             alt="Mariam Ahmed Elgohr"
             className="personal-image-img"
             style={{
@@ -985,7 +985,7 @@ function Hero({ lang }) {
         ) : (
           <picture className="personal-image-picture">
             <img
-              src="assets/hero/mariam_elgohr_hero_seamless.png"
+              src="assets/hero/photo_2026-10-11_22-28-38.jpg"
               alt="Mariam Ahmed Elgohr"
               className="personal-image-img"
             />
